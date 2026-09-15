@@ -46,7 +46,7 @@ void EntityManager::update() {
       m_entities.erase(m_entities.begin() + i);
 
       auto& teVec = m_taggedEntities[tag];
-      for (int j = 0; static_cast<int>(teVec.size()); j++) {
+      for (int j = 0; j < static_cast<int>(teVec.size()); j++) {
         if (teVec.at(j)->getId() == e->getId()) {
           teVec.erase(teVec.begin() + j);
           break;
