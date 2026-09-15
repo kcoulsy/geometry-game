@@ -3,8 +3,8 @@
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
-
 #include <SFML/Window/Mouse.hpp>
 #include <iostream>
 
@@ -26,6 +26,9 @@ Game::Game() {
   e->addComponent<CTransform>();
   e->addComponent<CRectShape>(Vec2(100, 100), sf::Color::Red, sf::Color::Black,
                               2.f);
+  e->addComponent<CVelocity>();
+  auto& v = e->getComponent<CVelocity>();
+  v.velocity.x = 30.f;
   m_entityManger.update();
 
   m_entityManger.printSize();
@@ -36,11 +39,13 @@ Game::Game() {
 Game::~Game() { delete m_window; }
 
 void Game::run() {
+  sf::Clock clock;
   while (getIsRunning()) {
+    const float dt = clock.restart().asSeconds();
     m_entityManger.update();
-    m_entityManger.printSize();
     pollEvents();
     updateMousePosition();
+    sMovement(dt);
     sRender();
   }
 }
@@ -64,6 +69,21 @@ void Game::updateMousePosition() {
   m_mousePosView = m_window->mapPixelToCoords(m_mousePosWindow);
   // std::cout << "Mouse pos: (" << mousePos.x << ", " << mousePos.y
   // << ")" << std::endl;
+}
+
+void Game::sMovement(float deltaTime) {
+  auto entities = m_entityManger.getEntities();
+
+  for (auto& e : entities) {
+    if (e->hasComponent<CVelocity>()) {
+      auto& transform = e->getComponent<CTransform>();
+      auto& velocity = e->getComponent<CVelocity>();
+
+      // add a vect helper
+      transform.position.x += velocity.velocity.x * deltaTime;
+      transform.position.y += velocity.velocity.y * deltaTime;
+    }
+  }
 }
 
 void Game::sRender() {

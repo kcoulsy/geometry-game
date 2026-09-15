@@ -37,5 +37,6 @@ public:
   void pollEvents();
   void updateMousePosition();
   void run();
+  void sMovement(float deltaTime);
   void sRender();
 };

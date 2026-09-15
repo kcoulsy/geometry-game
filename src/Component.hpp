@@ -12,6 +12,13 @@ public:
 class CTransform : public Component {
 public:
   Vec2 position = {0, 0};
+  float rotation = 0.0f;
+  Vec2 scale = {1.0f, 1.0f};
+};
+
+class CVelocity {
+public:
+  Vec2 velocity = {0.0f, 0.0f};
 };
 
 class CRectShape : public Component {
@@ -26,5 +33,6 @@ public:
   sf::RectangleShape shape;
 };
 
-typedef std::tuple<std::optional<CTransform>, std::optional<CRectShape>>
+typedef std::tuple<std::optional<CTransform>, std::optional<CVelocity>,
+                   std::optional<CRectShape>>
     Components;
