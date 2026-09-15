@@ -15,7 +15,7 @@ private:
   bool m_shouldDieNextFrame = false;
   // to change
   std::string m_tag;
-  std::tuple<Component> m_components;
+  Components m_components;
 
   Entity();
 
@@ -53,3 +53,18 @@ public:
   void update();
   void printSize();
 };
+
+template <typename T, typename... Args>
+void Entity::addComponent(Args&&... args) {
+  std::get<std::optional<T>>(m_components).emplace(std::forward<Args>(args)...);
+}
+
+template <typename T>
+T& Entity::getComponent() {
+  return std::get<std::optional<T>>(m_components).value();
+}
+
+template <typename T>
+bool Entity::hasComponent() const {
+  return std::get<std::optional<T>>(m_components).has_value();
+}

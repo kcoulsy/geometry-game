@@ -1,16 +1,13 @@
 
 
+#include "Component.hpp"
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <optional>
 #include <tuple>
 
-class Component {
-public:
-  bool exists;
-};
-
-class CTransform : public Component {
-public:
-  // Vec2 position = {0, 0};
-};
-
-typedef std::tuple<std::optional<CTransform>> Components;
+CRectShape::CRectShape(Vec2 init_size, sf::Color init_color,
+                       sf::Color init_outlineColour,
+                       float init_outlineThickness)
+    : size(init_size), color(init_color), outlineColour(init_outlineColour),
+      outlineThickness(init_outlineThickness) {}
