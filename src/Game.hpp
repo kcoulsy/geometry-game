@@ -16,36 +16,25 @@
 #include <vector>
 
 class Game {
-  private:
-    sf::RenderWindow *window;
-    sf::VideoMode videoMode;
+private:
+  sf::RenderWindow* window;
+  sf::VideoMode videoMode;
 
-    float enemySpawnTimer;
-    float enemySpawnTimerMax;
-    int maxEnemies;
-    unsigned int points;
+  sf::Vector2i mousePosWindow;
+  sf::Vector2f mousePosView;
+  bool isLeftMouseDown;
 
-    std::vector<sf::RectangleShape> enemies;
-    sf::RectangleShape enemy;
+  void initVars();
+  void initWindow();
 
-    sf::Vector2i mousePosWindow;
-    sf::Vector2f mousePosView;
-    bool isLeftMouseDown;
+public:
+  Game();
+  virtual ~Game();
 
-    void initVars();
-    void initWindow();
-    void initEnemies();
-
-  public:
-    Game();
-    virtual ~Game();
-
-    bool getIsRunning() const;
-    void pollEvents();
-    void updateMousePosition();
-    void update();
-    void render();
-    void spawnEnemy();
-    void updateEnemies();
-    void renderEnemies();
+  bool getIsRunning() const;
+  void pollEvents();
+  void updateMousePosition();
+  void run();
+  void update();
+  void render();
 };

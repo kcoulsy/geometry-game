@@ -48,6 +48,8 @@ private:
 public:
   EntityManager();
   std::shared_ptr<Entity> createEntity(const std::string& tag);
+  EntityVec& getEntities();
+  EntityVec& getEntities(const std::string& tag);
   void update();
   void printSize();
 };

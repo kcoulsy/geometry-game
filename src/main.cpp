@@ -4,10 +4,7 @@ int main() {
 
   Game game;
 
-  // while (game.getIsRunning()) {
-  //     game.update();
-  //     game.render();
-  // }
+  game.run();
 
   return 0;
 }
