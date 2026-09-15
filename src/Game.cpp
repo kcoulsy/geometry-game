@@ -6,7 +6,6 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Mouse.hpp>
-#include <iostream>
 
 void Game::initVars() {
   m_window = nullptr;

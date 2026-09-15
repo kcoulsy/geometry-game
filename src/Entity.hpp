@@ -13,7 +13,7 @@ class Entity {
 private:
   int m_id = 0;
   bool m_shouldDieNextFrame = false;
-  // to change
+
   std::string m_tag;
   Components m_components;
 
@@ -21,7 +21,7 @@ private:
 
 public:
   Entity(const std::string& tag, size_t id);
-  bool getId();
+  int getId();
   std::string getTag();
   template <typename T, typename... Args>
   void addComponent(Args&&... args);

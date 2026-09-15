@@ -2,7 +2,6 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <optional>
 #include <tuple>
-#include <utility>
 
 class Component {
 public:
