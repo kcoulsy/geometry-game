@@ -28,8 +28,10 @@ public:
   sf::Color outlineColour;
   float outlineThickness;
   CRectShape();
-  CRectShape(Vec2 size, sf::Color color, sf::Color outlineColour,
-             float outlineThickness);
+  CRectShape(Vec2 init_size, sf::Color init_color, sf::Color init_outlineColour,
+             float init_outlineThickness)
+      : size(init_size), color(init_color), outlineColour(init_outlineColour),
+        outlineThickness(init_outlineThickness) {}
   sf::RectangleShape shape;
 };
 
