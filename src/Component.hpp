@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Vec2.hpp"
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <optional>
@@ -15,7 +17,7 @@ public:
   Vec2 scale = {1.0f, 1.0f};
 };
 
-class CVelocity {
+class CVelocity : public Component {
 public:
   Vec2 velocity = {0.0f, 0.0f};
 };

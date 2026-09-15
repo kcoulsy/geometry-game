@@ -23,20 +23,21 @@ private:
   sf::Vector2i m_mousePosWindow;
   sf::Vector2f m_mousePosView;
 
-  EntityManager m_entityManger;
+  EntityManager m_entityManager;
   bool m_isLeftMouseDown;
 
   void initVars();
   void initWindow();
 
+  bool getIsRunning() const;
+  void pollEvents();
+  void updateMousePosition();
+  void sMovement(float deltaTime);
+  void sRender();
+
 public:
   Game();
   virtual ~Game();
 
-  bool getIsRunning() const;
-  void pollEvents();
-  void updateMousePosition();
   void run();
-  void sMovement(float deltaTime);
-  void sRender();
 };

@@ -21,16 +21,16 @@ void Game::initWindow() {
 }
 
 Game::Game() {
-  auto e = m_entityManger.createEntity("player");
+  auto e = m_entityManager.createEntity("player");
   e->addComponent<CTransform>();
   e->addComponent<CRectShape>(Vec2(100, 100), sf::Color::Red, sf::Color::Black,
                               2.f);
   e->addComponent<CVelocity>();
   auto& v = e->getComponent<CVelocity>();
   v.velocity.x = 30.f;
-  m_entityManger.update();
+  m_entityManager.update();
 
-  m_entityManger.printSize();
+  m_entityManager.printSize();
   initVars();
   initWindow();
 }
@@ -41,7 +41,7 @@ void Game::run() {
   sf::Clock clock;
   while (getIsRunning()) {
     const float dt = clock.restart().asSeconds();
-    m_entityManger.update();
+    m_entityManager.update();
     pollEvents();
     updateMousePosition();
     sMovement(dt);
@@ -71,10 +71,10 @@ void Game::updateMousePosition() {
 }
 
 void Game::sMovement(float deltaTime) {
-  auto entities = m_entityManger.getEntities();
+  auto& entities = m_entityManager.getEntities();
 
   for (auto& e : entities) {
-    if (e->hasComponent<CVelocity>()) {
+    if (e->hasComponent<CVelocity>() && e->hasComponent<CTransform>()) {
       auto& transform = e->getComponent<CTransform>();
       auto& velocity = e->getComponent<CVelocity>();
 
@@ -88,7 +88,7 @@ void Game::sMovement(float deltaTime) {
 void Game::sRender() {
   m_window->clear(sf::Color::Cyan);
 
-  auto entities = m_entityManger.getEntities();
+  auto& entities = m_entityManager.getEntities();
 
   for (auto& e : entities) {
     if (e->hasComponent<CRectShape>() && e->hasComponent<CTransform>()) {

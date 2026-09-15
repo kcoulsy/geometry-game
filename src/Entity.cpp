@@ -27,15 +27,6 @@ void EntityManager::update() {
 
   m_entitiesToAdd.clear();
 
-  std::vector<int> entitiesToRemove;
-  std::map<std::string, std::vector<int>> taggedEntitiesToRemove;
-
-  for (int i = 0; i < m_entities.size(); i++) {
-    if (m_entities[i]->shouldDieNextFrame()) {
-      entitiesToRemove.push_back(i);
-    }
-  }
-
   // go backwards to avoid shifting indexes
   for (int i = static_cast<int>(m_entities.size()) - 1; i >= 0; --i) {
     auto e = m_entities.at(i);
