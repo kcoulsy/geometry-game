@@ -48,9 +48,12 @@ class CShoot : public Component {
 public:
   float delayBetweenShots = {0};
   float timeSinceLastShot = {0};
+  float bulletSpeed = {10.f};
   CShoot() = default;
   // hacky way to allow immediate shooting
-  CShoot(float delay) : delayBetweenShots(delay), timeSinceLastShot(delay) {};
+  CShoot(float delay, float speed)
+      : delayBetweenShots(delay), timeSinceLastShot(delay),
+        bulletSpeed(speed) {};
 };
 
 class CLifetime : public Component {

@@ -13,5 +13,6 @@ public:
   Vec2 operator*(const Vec2& rhs) const;
   Vec2 operator*(float scale) const;
   Vec2& operator+=(const Vec2& rhs);
+  Vec2 normalize();
   void print(std::string label);
 };

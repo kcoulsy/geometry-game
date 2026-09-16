@@ -60,10 +60,10 @@ void Game::spawnPlayer() {
   e->addComponent<CRectShape>(Vec2(sizeX, sizeY), sf::Color::Red,
                               sf::Color::Black, 2.f);
   e->addComponent<CInput>();
-  e->addComponent<CShoot>(0.2f);
+  e->addComponent<CShoot>(0.1f, 150.f);
 }
 
-void Game::spawnBullet(Vec2& startPos, Vec2 towards) {
+void Game::spawnBullet(Vec2& startPos, Vec2 towards, float speed) {
   auto e = m_entityManager.createEntity("bullet");
 
   e->addComponent<CTransform>(startPos);
@@ -72,8 +72,7 @@ void Game::spawnBullet(Vec2& startPos, Vec2 towards) {
   e->addComponent<CInput>();
   auto& vc = e->addComponent<CVelocity>();
 
-  // TODO: normalize this
-  vc.velocity += towards - startPos;
+  vc.velocity += (towards - startPos).normalize() * speed;
 
   e->addComponent<CLifetime>(2.f);
 }
@@ -124,7 +123,8 @@ void Game::sShootGun(float dt) {
           auto mp = m_window->mapPixelToCoords(p);
           Vec2 mouseVec = Vec2(mp.x, mp.y);
 
-          spawnBullet(e->getComponent<CTransform>().position, mouseVec);
+          spawnBullet(e->getComponent<CTransform>().position, mouseVec,
+                      cs.bulletSpeed);
         }
       } else {
         cs.timeSinceLastShot += dt;

@@ -1,4 +1,5 @@
 #include "Vec2.hpp"
+#include <cmath>
 #include <iostream>
 
 Vec2::Vec2() {}
@@ -25,6 +26,11 @@ Vec2& Vec2::operator+=(const Vec2& rhs) {
   y += rhs.y;
 
   return *this;
+}
+
+Vec2 Vec2::normalize() {
+  float length = std::sqrt(x * x + y * y);
+  return Vec2(x / length, y / length);
 }
 
 void Vec2::print(std::string label) {

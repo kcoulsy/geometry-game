@@ -25,7 +25,7 @@ private:
   void pollEvents();
 
   void spawnPlayer();
-  void spawnBullet(Vec2& startPos, Vec2 towards);
+  void spawnBullet(Vec2& startPos, Vec2 towards, float speed);
 
   void sInput();
   void sLifetime(float dt);
