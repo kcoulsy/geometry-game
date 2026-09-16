@@ -32,6 +32,12 @@ private:
   bool getIsRunning() const;
   void pollEvents();
   void updateMousePosition();
+
+  void spawnPlayer();
+  void spawnBullet(Vec2& startPos);
+
+  void sInput();
+  void sShootGun(float deltaTime);
   void sMovement(float deltaTime);
   void sRender();
 

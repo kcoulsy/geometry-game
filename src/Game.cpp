@@ -1,11 +1,15 @@
 #include "Game.hpp"
+#include "Component.hpp"
 #include "Entity.hpp"
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <cstdio>
+#include <iostream>
 
 void Game::initVars() {
   m_window = nullptr;
@@ -21,18 +25,9 @@ void Game::initWindow() {
 }
 
 Game::Game() {
-  auto e = m_entityManager.createEntity("player");
-  e->addComponent<CTransform>();
-  e->addComponent<CRectShape>(Vec2(100, 100), sf::Color::Red, sf::Color::Black,
-                              2.f);
-  e->addComponent<CVelocity>();
-  auto& v = e->getComponent<CVelocity>();
-  v.velocity.x = 30.f;
-  m_entityManager.update();
-
-  m_entityManager.printSize();
   initVars();
   initWindow();
+  spawnPlayer();
 }
 
 Game::~Game() { delete m_window; }
@@ -44,6 +39,8 @@ void Game::run() {
     m_entityManager.update();
     pollEvents();
     updateMousePosition();
+    sInput();
+    sShootGun(dt);
     sMovement(dt);
     sRender();
   }
@@ -68,6 +65,67 @@ void Game::updateMousePosition() {
   m_mousePosView = m_window->mapPixelToCoords(m_mousePosWindow);
   // std::cout << "Mouse pos: (" << mousePos.x << ", " << mousePos.y
   // << ")" << std::endl;
+}
+
+void Game::spawnPlayer() {
+  auto e = m_entityManager.createEntity("player");
+  float sizeX = 100.f;
+  float sizeY = 100.f;
+  float xPos = static_cast<float>(m_window->getSize().x) / 2 - sizeX / 2;
+  float yPos = static_cast<float>(m_window->getSize().y) / 2 - sizeY / 2;
+
+  e->addComponent<CTransform>(Vec2(xPos, yPos));
+  e->addComponent<CRectShape>(Vec2(sizeX, sizeY), sf::Color::Red,
+                              sf::Color::Black, 2.f);
+  e->addComponent<CInput>();
+  e->addComponent<CShoot>(0.5f);
+}
+
+void Game::spawnBullet(Vec2& startPos) {
+  auto e = m_entityManager.createEntity("player");
+
+  e->addComponent<CTransform>(startPos);
+  e->addComponent<CRectShape>(Vec2(10.f, 10.f), sf::Color::Green,
+                              sf::Color::Black, 2.f);
+  e->addComponent<CInput>();
+  auto& vc = e->addComponent<CVelocity>();
+  vc.velocity.x = 200.f;
+}
+
+void Game::sInput() {
+  auto& entities = m_entityManager.getEntities("player");
+
+  for (auto& e : entities) {
+    if (e->hasComponent<CInput>()) {
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+        e->getComponent<CInput>().shoot = true;
+      } else {
+        e->getComponent<CInput>().shoot = false;
+      }
+    }
+  }
+}
+
+void Game::sShootGun(float dt) {
+  auto& entities = m_entityManager.getEntities("player");
+
+  for (auto& e : entities) {
+    if (e->hasComponent<CShoot>()) {
+      auto& cs = e->getComponent<CShoot>();
+
+      std::cout << "pressing shoot " << cs.timeSinceLastShot << " "
+                << cs.delayBetweenShots << std::endl;
+      if (cs.timeSinceLastShot >= cs.delayBetweenShots) {
+        if (e->hasComponent<CTransform>() && e->hasComponent<CInput>() &&
+            e->getComponent<CInput>().shoot) {
+          cs.timeSinceLastShot = 0;
+          spawnBullet(e->getComponent<CTransform>().position);
+        }
+      } else {
+        cs.timeSinceLastShot += dt;
+      }
+    }
+  }
 }
 
 void Game::sMovement(float deltaTime) {

@@ -17,6 +17,7 @@ public:
   CTransform() = default;
   CTransform(const Vec2& vp, float r, const Vec2& vs)
       : position(vp), rotation(r), scale(vs) {};
+  CTransform(const Vec2& vp) : position(vp) {};
 };
 
 class CVelocity : public Component {
@@ -38,4 +39,19 @@ public:
   sf::RectangleShape shape;
 };
 
-typedef std::tuple<CTransform, CVelocity, CRectShape> Components;
+class CInput : public Component {
+public:
+  bool shoot = false;
+};
+
+class CShoot : public Component {
+public:
+  float delayBetweenShots = {0};
+  float timeSinceLastShot = {0};
+  CShoot() = default;
+  // hacky way to allow immediate shooting
+  CShoot(float delay) : delayBetweenShots(delay), timeSinceLastShot(delay) {};
+};
+
+typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot>
+    Components;
