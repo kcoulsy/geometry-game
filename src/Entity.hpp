@@ -23,12 +23,15 @@ public:
   Entity(const std::string& tag, size_t id);
   int getId();
   std::string getTag();
+
   template <typename T, typename... Args>
-  void addComponent(Args&&... args);
+  T& addComponent(Args&&... args);
   template <typename T>
   T& getComponent();
   template <typename T>
   bool hasComponent() const;
+  template <typename T>
+  void removeComponent();
 
   bool shouldDieNextFrame();
 
@@ -55,16 +58,24 @@ public:
 };
 
 template <typename T, typename... Args>
-void Entity::addComponent(Args&&... args) {
-  std::get<std::optional<T>>(m_components).emplace(std::forward<Args>(args)...);
+T& Entity::addComponent(Args&&... args) {
+  auto& component = std::get<T>(m_components);
+  component = T(std::forward<Args>(args)...);
+  component.exists = true;
+  return component;
 }
 
 template <typename T>
 T& Entity::getComponent() {
-  return std::get<std::optional<T>>(m_components).value();
+  return std::get<T>(m_components);
 }
 
 template <typename T>
 bool Entity::hasComponent() const {
-  return std::get<std::optional<T>>(m_components).has_value();
+  return std::get<T>(m_components).exists;
+}
+
+template <typename T>
+void Entity::removeComponent() {
+  return std::get<T>(m_components) = T();
 }

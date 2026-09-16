@@ -78,9 +78,7 @@ void Game::sMovement(float deltaTime) {
       auto& transform = e->getComponent<CTransform>();
       auto& velocity = e->getComponent<CVelocity>();
 
-      // add a vect helper
-      transform.position.x += velocity.velocity.x * deltaTime;
-      transform.position.y += velocity.velocity.y * deltaTime;
+      transform.position += velocity.velocity * deltaTime;
     }
   }
 }
