@@ -37,6 +37,7 @@ private:
   void spawnBullet(Vec2& startPos);
 
   void sInput();
+  void sLifetime(float dt);
   void sShootGun(float deltaTime);
   void sMovement(float deltaTime);
   void sRender();

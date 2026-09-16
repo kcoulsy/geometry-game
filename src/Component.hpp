@@ -53,5 +53,13 @@ public:
   CShoot(float delay) : delayBetweenShots(delay), timeSinceLastShot(delay) {};
 };
 
-typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot>
+class CLifetime : public Component {
+public:
+  float timeUntilDestroy = {0};
+  float timeAlive = {0};
+  CLifetime() = default;
+  CLifetime(float time) : timeUntilDestroy(time) {}
+};
+
+typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot, CLifetime>
     Components;

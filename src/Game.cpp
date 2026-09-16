@@ -39,6 +39,7 @@ void Game::run() {
     m_entityManager.update();
     pollEvents();
     updateMousePosition();
+    sLifetime(dt);
     sInput();
     sShootGun(dt);
     sMovement(dt);
@@ -90,6 +91,8 @@ void Game::spawnBullet(Vec2& startPos) {
   e->addComponent<CInput>();
   auto& vc = e->addComponent<CVelocity>();
   vc.velocity.x = 200.f;
+
+  e->addComponent<CLifetime>(2.f);
 }
 
 void Game::sInput() {
@@ -101,6 +104,22 @@ void Game::sInput() {
         e->getComponent<CInput>().shoot = true;
       } else {
         e->getComponent<CInput>().shoot = false;
+      }
+    }
+  }
+}
+
+void Game::sLifetime(float dt) {
+  auto& entities = m_entityManager.getEntities();
+
+  for (auto& e : entities) {
+    if (e->hasComponent<CLifetime>()) {
+      auto& cl = e->getComponent<CLifetime>();
+
+      if (cl.timeAlive <= cl.timeUntilDestroy) {
+        cl.timeAlive += dt;
+      } else {
+        e->destroy();
       }
     }
   }
