@@ -19,22 +19,13 @@ class Game {
 private:
   sf::RenderWindow* m_window;
   sf::VideoMode m_videoMode;
-
-  sf::Vector2i m_mousePosWindow;
-  sf::Vector2f m_mousePosView;
-
   EntityManager m_entityManager;
-  bool m_isLeftMouseDown;
-
-  void initVars();
-  void initWindow();
 
   bool getIsRunning() const;
   void pollEvents();
-  void updateMousePosition();
 
   void spawnPlayer();
-  void spawnBullet(Vec2& startPos);
+  void spawnBullet(Vec2& startPos, Vec2 towards);
 
   void sInput();
   void sLifetime(float dt);

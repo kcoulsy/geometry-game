@@ -1,4 +1,5 @@
 #include "Vec2.hpp"
+#include <iostream>
 
 Vec2::Vec2() {}
 Vec2::Vec2(float init_x, float init_y) : x(init_x), y(init_y) {}
@@ -24,4 +25,8 @@ Vec2& Vec2::operator+=(const Vec2& rhs) {
   y += rhs.y;
 
   return *this;
+}
+
+void Vec2::print(std::string label) {
+  std::cout << "Vec2 " << label << " (" << x << "," << y << ")\n";
 }

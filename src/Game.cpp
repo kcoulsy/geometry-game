@@ -8,25 +8,15 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
-#include <cstdio>
-#include <iostream>
 
-void Game::initVars() {
+Game::Game() {
   m_window = nullptr;
-  m_isLeftMouseDown = false;
-}
-
-void Game::initWindow() {
   m_videoMode = sf::VideoMode({800, 600});
   m_window = new sf::RenderWindow(m_videoMode, "My game",
                                   sf::Style::Titlebar | sf::Style::Close);
 
   m_window->setFramerateLimit(60);
-}
 
-Game::Game() {
-  initVars();
-  initWindow();
   spawnPlayer();
 }
 
@@ -38,7 +28,6 @@ void Game::run() {
     const float dt = clock.restart().asSeconds();
     m_entityManager.update();
     pollEvents();
-    updateMousePosition();
     sLifetime(dt);
     sInput();
     sShootGun(dt);
@@ -60,37 +49,31 @@ void Game::pollEvents() {
   }
 }
 
-void Game::updateMousePosition() {
-  m_mousePosWindow = sf::Mouse::getPosition(*m_window);
-
-  m_mousePosView = m_window->mapPixelToCoords(m_mousePosWindow);
-  // std::cout << "Mouse pos: (" << mousePos.x << ", " << mousePos.y
-  // << ")" << std::endl;
-}
-
 void Game::spawnPlayer() {
   auto e = m_entityManager.createEntity("player");
   float sizeX = 100.f;
   float sizeY = 100.f;
-  float xPos = static_cast<float>(m_window->getSize().x) / 2 - sizeX / 2;
-  float yPos = static_cast<float>(m_window->getSize().y) / 2 - sizeY / 2;
+  float xPos = static_cast<float>(m_window->getSize().x) / 2;
+  float yPos = static_cast<float>(m_window->getSize().y) / 2;
 
   e->addComponent<CTransform>(Vec2(xPos, yPos));
   e->addComponent<CRectShape>(Vec2(sizeX, sizeY), sf::Color::Red,
                               sf::Color::Black, 2.f);
   e->addComponent<CInput>();
-  e->addComponent<CShoot>(0.5f);
+  e->addComponent<CShoot>(0.2f);
 }
 
-void Game::spawnBullet(Vec2& startPos) {
-  auto e = m_entityManager.createEntity("player");
+void Game::spawnBullet(Vec2& startPos, Vec2 towards) {
+  auto e = m_entityManager.createEntity("bullet");
 
   e->addComponent<CTransform>(startPos);
   e->addComponent<CRectShape>(Vec2(10.f, 10.f), sf::Color::Green,
                               sf::Color::Black, 2.f);
   e->addComponent<CInput>();
   auto& vc = e->addComponent<CVelocity>();
-  vc.velocity.x = 200.f;
+
+  // TODO: normalize this
+  vc.velocity += towards - startPos;
 
   e->addComponent<CLifetime>(2.f);
 }
@@ -132,13 +115,16 @@ void Game::sShootGun(float dt) {
     if (e->hasComponent<CShoot>()) {
       auto& cs = e->getComponent<CShoot>();
 
-      std::cout << "pressing shoot " << cs.timeSinceLastShot << " "
-                << cs.delayBetweenShots << std::endl;
       if (cs.timeSinceLastShot >= cs.delayBetweenShots) {
         if (e->hasComponent<CTransform>() && e->hasComponent<CInput>() &&
             e->getComponent<CInput>().shoot) {
           cs.timeSinceLastShot = 0;
-          spawnBullet(e->getComponent<CTransform>().position);
+
+          auto p = sf::Mouse::getPosition(*m_window);
+          auto mp = m_window->mapPixelToCoords(p);
+          Vec2 mouseVec = Vec2(mp.x, mp.y);
+
+          spawnBullet(e->getComponent<CTransform>().position, mouseVec);
         }
       } else {
         cs.timeSinceLastShot += dt;
@@ -169,6 +155,7 @@ void Game::sRender() {
     if (e->hasComponent<CRectShape>() && e->hasComponent<CTransform>()) {
       auto& cs = e->getComponent<CRectShape>();
       auto& ct = e->getComponent<CTransform>();
+      cs.shape.setOrigin(sf::Vector2f(cs.size.x / 2, cs.size.y / 2));
       cs.shape.setPosition(sf::Vector2f(ct.position.x, ct.position.y));
       cs.shape.setSize(sf::Vector2f(cs.size.x, cs.size.y));
       cs.shape.setFillColor(cs.color);
