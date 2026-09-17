@@ -31,11 +31,14 @@ private:
   void sLifetime(float dt);
   void sShootGun(float deltaTime);
   void sMovement(float deltaTime);
-  void sRender();
+  // void sRender();
 
 public:
   Game();
   virtual ~Game();
+
+  sf::RenderWindow* getWindow();
+  EntityManager* getEntityManager();
 
   void run();
 };

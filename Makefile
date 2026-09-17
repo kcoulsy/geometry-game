@@ -19,9 +19,9 @@ LDLIBS := $(SFML_LIBS)
 SRC_DIR := src
 BUILD_DIR := build
 
-# Find every .cpp source file and map src/name.cpp to build/name.o. Add another
-# source file under src and it is included automatically on the next make.
-SOURCES := $(wildcard $(SRC_DIR)/*.cpp)
+# Find every .cpp source file, including subdirectories, and preserve its path
+# under build. New source files are included automatically on the next make.
+SOURCES := $(shell find $(SRC_DIR) -type f -name '*.cpp')
 OBJECTS := $(SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS := $(OBJECTS:.o=.d)
 
@@ -43,6 +43,7 @@ $(BUILD_DIR)/$(APP): $(OBJECTS) | $(BUILD_DIR)
 # Compile each source file separately. $< is the first prerequisite (the .cpp
 # file); $@ is the target (the .o file). This rule also works for future files.
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Create the output directory only when it is missing.

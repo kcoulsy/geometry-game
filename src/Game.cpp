@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"
+#include "Systems/Render.hpp"
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -32,7 +33,7 @@ void Game::run() {
     sInput();
     sShootGun(dt);
     sMovement(dt);
-    sRender();
+    sRender(this);
   }
 }
 
@@ -57,8 +58,7 @@ void Game::spawnPlayer() {
   float yPos = static_cast<float>(m_window->getSize().y) / 2;
 
   e->addComponent<CTransform>(Vec2(xPos, yPos));
-  e->addComponent<CRectShape>(Vec2(sizeX, sizeY), sf::Color::Red,
-                              sf::Color::Black, 2.f);
+  e->addComponent<CPolyShape>(5.f, sf::Color::Red, sf::Color::Black, 2.f, 5);
   e->addComponent<CInput>();
   e->addComponent<CShoot>(0.1f, 150.f);
 }
@@ -146,26 +146,7 @@ void Game::sMovement(float deltaTime) {
   }
 }
 
-void Game::sRender() {
-  m_window->clear(sf::Color::Cyan);
-
-  auto& entities = m_entityManager.getEntities();
-
-  for (auto& e : entities) {
-    if (e->hasComponent<CRectShape>() && e->hasComponent<CTransform>()) {
-      auto& cs = e->getComponent<CRectShape>();
-      auto& ct = e->getComponent<CTransform>();
-      cs.shape.setOrigin(sf::Vector2f(cs.size.x / 2, cs.size.y / 2));
-      cs.shape.setPosition(sf::Vector2f(ct.position.x, ct.position.y));
-      cs.shape.setSize(sf::Vector2f(cs.size.x, cs.size.y));
-      cs.shape.setFillColor(cs.color);
-      cs.shape.setOutlineColor(cs.outlineColour);
-      cs.shape.setOutlineThickness(cs.outlineThickness);
-      m_window->draw(cs.shape);
-    }
-  }
-
-  m_window->display();
-}
-
 bool Game::getIsRunning() const { return m_window->isOpen(); }
+
+sf::RenderWindow* Game::getWindow() { return m_window; }
+EntityManager* Game::getEntityManager() { return &m_entityManager; }

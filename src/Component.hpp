@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vec2.hpp"
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <tuple>
 
@@ -39,6 +40,23 @@ public:
   sf::RectangleShape shape;
 };
 
+class CPolyShape : public Component {
+public:
+  float radius = 0.f;
+  sf::Color color;
+  sf::Color outlineColour;
+  float outlineThickness = 0.f;
+  int sides = 3;
+  CPolyShape() = default;
+  CPolyShape(float init_radius, sf::Color init_color,
+             sf::Color init_outlineColour, float init_outlineThickness,
+             int init_sides)
+      : radius(init_radius), color(init_color),
+        outlineColour(init_outlineColour),
+        outlineThickness(init_outlineThickness), sides(init_sides) {}
+  sf::CircleShape shape;
+};
+
 class CInput : public Component {
 public:
   bool shoot = false;
@@ -64,5 +82,6 @@ public:
   CLifetime(float time) : timeUntilDestroy(time) {}
 };
 
-typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot, CLifetime>
+typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot, CLifetime,
+                   CPolyShape>
     Components;
