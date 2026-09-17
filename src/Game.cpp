@@ -1,6 +1,10 @@
 #include "Game.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"
+#include "Systems/Input.hpp"
+#include "Systems/Lifetime.hpp"
+#include "Systems/Movement.hpp"
+#include "Systems/PlayerShoot.hpp"
 #include "Systems/Render.hpp"
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
@@ -29,10 +33,10 @@ void Game::run() {
     const float dt = clock.restart().asSeconds();
     m_entityManager.update();
     pollEvents();
-    sLifetime(dt);
-    sInput();
-    sShootGun(dt);
-    sMovement(dt);
+    sLifetime(this, dt);
+    sInput(this);
+    sPlayerShoot(this, dt);
+    sMovement(this, dt);
     sRender(this);
   }
 }
@@ -75,75 +79,6 @@ void Game::spawnBullet(Vec2& startPos, Vec2 towards, float speed) {
   vc.velocity += (towards - startPos).normalize() * speed;
 
   e->addComponent<CLifetime>(2.f);
-}
-
-void Game::sInput() {
-  auto& entities = m_entityManager.getEntities("player");
-
-  for (auto& e : entities) {
-    if (e->hasComponent<CInput>()) {
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-        e->getComponent<CInput>().shoot = true;
-      } else {
-        e->getComponent<CInput>().shoot = false;
-      }
-    }
-  }
-}
-
-void Game::sLifetime(float dt) {
-  auto& entities = m_entityManager.getEntities();
-
-  for (auto& e : entities) {
-    if (e->hasComponent<CLifetime>()) {
-      auto& cl = e->getComponent<CLifetime>();
-
-      if (cl.timeAlive <= cl.timeUntilDestroy) {
-        cl.timeAlive += dt;
-      } else {
-        e->destroy();
-      }
-    }
-  }
-}
-
-void Game::sShootGun(float dt) {
-  auto& entities = m_entityManager.getEntities("player");
-
-  for (auto& e : entities) {
-    if (e->hasComponent<CShoot>()) {
-      auto& cs = e->getComponent<CShoot>();
-
-      if (cs.timeSinceLastShot >= cs.delayBetweenShots) {
-        if (e->hasComponent<CTransform>() && e->hasComponent<CInput>() &&
-            e->getComponent<CInput>().shoot) {
-          cs.timeSinceLastShot = 0;
-
-          auto p = sf::Mouse::getPosition(*m_window);
-          auto mp = m_window->mapPixelToCoords(p);
-          Vec2 mouseVec = Vec2(mp.x, mp.y);
-
-          spawnBullet(e->getComponent<CTransform>().position, mouseVec,
-                      cs.bulletSpeed);
-        }
-      } else {
-        cs.timeSinceLastShot += dt;
-      }
-    }
-  }
-}
-
-void Game::sMovement(float deltaTime) {
-  auto& entities = m_entityManager.getEntities();
-
-  for (auto& e : entities) {
-    if (e->hasComponent<CVelocity>() && e->hasComponent<CTransform>()) {
-      auto& transform = e->getComponent<CTransform>();
-      auto& velocity = e->getComponent<CVelocity>();
-
-      transform.position += velocity.velocity * deltaTime;
-    }
-  }
 }
 
 bool Game::getIsRunning() const { return m_window->isOpen(); }

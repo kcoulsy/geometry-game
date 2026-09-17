@@ -24,13 +24,10 @@ private:
   bool getIsRunning() const;
   void pollEvents();
 
-  void spawnPlayer();
-  void spawnBullet(Vec2& startPos, Vec2 towards, float speed);
-
-  void sInput();
-  void sLifetime(float dt);
-  void sShootGun(float deltaTime);
-  void sMovement(float deltaTime);
+  // void sInput();
+  // void sLifetime(float dt);
+  // void sShootGun(float deltaTime);
+  // void sMovement(float deltaTime);
   // void sRender();
 
 public:
@@ -39,6 +36,9 @@ public:
 
   sf::RenderWindow* getWindow();
   EntityManager* getEntityManager();
+
+  void spawnPlayer();
+  void spawnBullet(Vec2& startPos, Vec2 towards, float speed);
 
   void run();
 };
