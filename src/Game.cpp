@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"
+#include "Systems/EnemySpawner.hpp"
 #include "Systems/Input.hpp"
 #include "Systems/Lifetime.hpp"
 #include "Systems/Movement.hpp"
@@ -13,6 +14,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <cstdio>
 
 Game::Game() {
   m_window = nullptr;
@@ -23,6 +25,8 @@ Game::Game() {
   m_window->setFramerateLimit(60);
 
   spawnPlayer();
+  auto e = m_entityManager.createEntity("enemy_manager");
+  auto em = e->addComponent<CEnemyManager>(5, 3.f);
 }
 
 Game::~Game() { delete m_window; }
@@ -37,6 +41,7 @@ void Game::run() {
     sInput(this);
     sPlayerShoot(this, dt);
     sMovement(this, dt);
+    sEnemySpawner(this, dt);
     sRender(this);
   }
 }
@@ -62,7 +67,7 @@ void Game::spawnPlayer() {
   float yPos = static_cast<float>(m_window->getSize().y) / 2;
 
   e->addComponent<CTransform>(Vec2(xPos, yPos));
-  e->addComponent<CPolyShape>(5.f, sf::Color::Red, sf::Color::Black, 2.f, 5);
+  e->addComponent<CPolyShape>(12.f, sf::Color::Red, sf::Color::Black, 2.f, 5);
   e->addComponent<CInput>();
   e->addComponent<CShoot>(0.1f, 150.f);
 }
@@ -79,6 +84,20 @@ void Game::spawnBullet(Vec2& startPos, Vec2 towards, float speed) {
   vc.velocity += (towards - startPos).normalize() * speed;
 
   e->addComponent<CLifetime>(2.f);
+}
+
+void Game::spawnEnemy() {
+  auto e = m_entityManager.createEntity("enemies");
+  float sizeX = 100.f;
+  float sizeY = 100.f;
+  int xPos = rand() % m_window->getSize().x;
+  int yPos = rand() % m_window->getSize().y;
+
+  std::printf("Spawning enemy at %i, %i\n", xPos, yPos);
+  e->addComponent<CTransform>(Vec2(xPos, yPos));
+  e->addComponent<CPolyShape>(15.f, sf::Color::Green, sf::Color::Black, 2.f, 6);
+  e->addComponent<CInput>();
+  e->addComponent<CShoot>(0.1f, 150.f);
 }
 
 bool Game::getIsRunning() const { return m_window->isOpen(); }

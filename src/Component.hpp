@@ -82,6 +82,18 @@ public:
   CLifetime(float time) : timeUntilDestroy(time) {}
 };
 
+class CEnemyManager : public Component {
+public:
+  int currentEnemyCount = 0;
+  int maxEnemies = 5;
+  float spawnInterval = {0};
+  float timeSinceLastSpawn = {0};
+  CEnemyManager() = default;
+  CEnemyManager(int max, float interval)
+      : maxEnemies(max), spawnInterval(interval), timeSinceLastSpawn(interval) {
+  }
+};
+
 typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot, CLifetime,
-                   CPolyShape>
+                   CPolyShape, CEnemyManager>
     Components;
