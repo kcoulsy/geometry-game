@@ -1,4 +1,9 @@
 #include "Render.hpp"
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Shape.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <iostream>
 
 void sRender(Game* gameCtx) {
   auto em = gameCtx->getEntityManager();
@@ -30,6 +35,20 @@ void sRender(Game* gameCtx) {
       cs.shape.setOutlineColor(cs.outlineColour);
       cs.shape.setOutlineThickness(cs.outlineThickness);
       window->draw(cs.shape);
+    }
+    if (e->hasComponent<CBoundingBox>()) {
+      auto& cbb = e->getComponent<CBoundingBox>();
+      if (cbb.debug) {
+        auto& ct = e->getComponent<CTransform>();
+        cbb.debugShape.setOrigin(sf::Vector2f(cbb.width / 2, cbb.height / 2));
+        cbb.debugShape.setSize(sf::Vector2f(cbb.width, cbb.height));
+        cbb.debugShape.setPosition(sf::Vector2f(ct.position.x + cbb.offset.x,
+                                                ct.position.y + cbb.offset.y));
+        cbb.debugShape.setFillColor(sf::Color::Transparent);
+        cbb.debugShape.setOutlineColor(sf::Color::Red);
+        cbb.debugShape.setOutlineThickness(2.f);
+        window->draw(cbb.debugShape);
+      }
     }
   }
 

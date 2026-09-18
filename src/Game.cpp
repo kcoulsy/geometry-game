@@ -5,6 +5,7 @@
 #include "Systems/Input.hpp"
 #include "Systems/Lifetime.hpp"
 #include "Systems/Movement.hpp"
+#include "Systems/Physics.hpp"
 #include "Systems/PlayerShoot.hpp"
 #include "Systems/Render.hpp"
 #include "Vec2.hpp"
@@ -15,6 +16,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <cstdio>
+#include <cstdlib>
 
 Game::Game() {
   m_window = nullptr;
@@ -26,7 +28,7 @@ Game::Game() {
 
   spawnPlayer();
   auto e = m_entityManager.createEntity("enemy_manager");
-  auto em = e->addComponent<CEnemyManager>(5, 3.f);
+  auto em = e->addComponent<CEnemyManager>(500, 0.1f);
 }
 
 Game::~Game() { delete m_window; }
@@ -40,6 +42,7 @@ void Game::run() {
     sLifetime(this, dt);
     sInput(this);
     sPlayerShoot(this, dt);
+    sPhysics(this, dt);
     sMovement(this, dt);
     sEnemySpawner(this, dt);
     sRender(this);
@@ -88,16 +91,43 @@ void Game::spawnBullet(Vec2& startPos, Vec2 towards, float speed) {
 
 void Game::spawnEnemy() {
   auto e = m_entityManager.createEntity("enemies");
-  float sizeX = 100.f;
-  float sizeY = 100.f;
+  float radius = rand() % 5 * 10.f;
   int xPos = rand() % m_window->getSize().x;
   int yPos = rand() % m_window->getSize().y;
+  int points = rand() % 5 + 3;
+  sf::Color pickedColor = sf::Color::Green;
+  switch (points) {
+  case 3:
+    pickedColor = sf::Color::Blue;
+    break;
+  case 4:
+    pickedColor = sf::Color::Magenta;
+    break;
+  case 5:
+    pickedColor = sf::Color::Red;
+    break;
+  case 6:
+    pickedColor = sf::Color::Yellow;
+    break;
+  case 7:
+    pickedColor = sf::Color::Green;
+    break;
+  }
 
   std::printf("Spawning enemy at %i, %i\n", xPos, yPos);
   e->addComponent<CTransform>(Vec2(xPos, yPos));
-  e->addComponent<CPolyShape>(15.f, sf::Color::Green, sf::Color::Black, 2.f, 6);
+  e->addComponent<CPolyShape>(radius, pickedColor, sf::Color::Black, 2.f,
+                              points);
   e->addComponent<CInput>();
+  auto& bb = e->addComponent<CBoundingBox>(radius * 2, radius * 2,
+                                           Vec2(radius, radius));
+  bb.debug = true;
   e->addComponent<CShoot>(0.1f, 150.f);
+  int randX = (rand() % 7) - 7;
+  int randY = (rand() % 7) - 7;
+
+  e->addComponent<CVelocity>(
+      Vec2(static_cast<float>(randX), static_cast<float>(randY)) * 30.f);
 }
 
 bool Game::getIsRunning() const { return m_window->isOpen(); }

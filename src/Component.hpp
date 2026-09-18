@@ -24,6 +24,8 @@ public:
 class CVelocity : public Component {
 public:
   Vec2 velocity = {0.0f, 0.0f};
+  CVelocity() = default;
+  CVelocity(Vec2 v) : velocity(v) {}
 };
 
 class CRectShape : public Component {
@@ -55,6 +57,18 @@ public:
         outlineColour(init_outlineColour),
         outlineThickness(init_outlineThickness), sides(init_sides) {}
   sf::CircleShape shape;
+};
+
+class CBoundingBox : public Component {
+public:
+  Vec2 offset = {0, 0};
+  float width = {0};
+  float height = {0};
+  bool debug = false;
+  sf::RectangleShape debugShape;
+  CBoundingBox() = default;
+  CBoundingBox(float xIn, float yIn, Vec2 offsetIn)
+      : width(xIn), height(yIn), offset(offsetIn) {}
 };
 
 class CInput : public Component {
@@ -95,5 +109,5 @@ public:
 };
 
 typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot, CLifetime,
-                   CPolyShape, CEnemyManager>
+                   CPolyShape, CEnemyManager, CBoundingBox>
     Components;
