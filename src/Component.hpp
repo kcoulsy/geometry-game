@@ -67,6 +67,7 @@ public:
   bool debug = false;
   sf::RectangleShape debugShape;
   CBoundingBox() = default;
+  CBoundingBox(float xIn, float yIn) : width(xIn), height(yIn) {}
   CBoundingBox(float xIn, float yIn, Vec2 offsetIn)
       : width(xIn), height(yIn), offset(offsetIn) {}
 };

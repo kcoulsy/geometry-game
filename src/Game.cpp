@@ -36,6 +36,7 @@ void Game::run() {
     sLifetime(this, dt);
     sInput(this);
     sPlayerShoot(this, dt);
+    sBulletCollision(this);
     sPhysics(this, dt);
     sMovement(this, dt);
     sEnemySpawner(this, dt);
@@ -81,6 +82,8 @@ void Game::spawnBullet(Vec2& startPos, Vec2 towards, float speed) {
   vc.velocity += (towards - startPos).normalize() * speed;
 
   e->addComponent<CLifetime>(2.f);
+  auto& bb = e->addComponent<CBoundingBox>(10.f, 10.f);
+  bb.debug = true;
 }
 
 void Game::spawnEnemy() {

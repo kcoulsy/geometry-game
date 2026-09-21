@@ -24,12 +24,6 @@ private:
   bool getIsRunning() const;
   void pollEvents();
 
-  // void sInput();
-  // void sLifetime(float dt);
-  // void sShootGun(float deltaTime);
-  // void sMovement(float deltaTime);
-  // void sRender();
-
 public:
   Game();
   virtual ~Game();

@@ -15,3 +15,5 @@ void sPhysics(Game* gameCtx, float deltaTime);
 void sPlayerShoot(Game* gameCtx, float deltaTime);
 
 void sRender(Game* gameCtx);
+
+void sBulletCollision(Game* gameCtx);

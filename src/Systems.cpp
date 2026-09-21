@@ -1,8 +1,11 @@
 #include "Systems.hpp"
+#include "Component.hpp"
+#include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <iostream>
 
 void sEnemySpawner(Game* gameCtx, float deltaTime) {
   auto em = gameCtx->getEntityManager();
@@ -64,7 +67,7 @@ void sMovement(Game* gameCtx, float deltaTime) {
       auto& transform = e->getComponent<CTransform>();
       auto& velocity = e->getComponent<CVelocity>();
 
-      velocity.velocity.print("v");
+      // velocity.velocity.print("v");
 
       transform.position += velocity.velocity * deltaTime;
     }
@@ -173,4 +176,37 @@ void sRender(Game* gameCtx) {
   }
 
   window->display();
+}
+
+bool isCollidingWith(Vec2 aPos, Vec2 aSize, Vec2 bPos, Vec2 bSize) {
+  return (aPos.x < bPos.x + bSize.x && aPos.x + aSize.x > bPos.x &&
+          aPos.y < bPos.y + bSize.y && aPos.y + aSize.y > bPos.y);
+}
+
+void sBulletCollision(Game* gameCtx) {
+  auto& bullets = gameCtx->getEntityManager()->getEntities("bullet");
+  auto& enemies = gameCtx->getEntityManager()->getEntities("enemies");
+
+  for (auto bulletEnt : bullets) {
+    if (bulletEnt->hasComponent<CBoundingBox>()) {
+      CBoundingBox& bulletBB = bulletEnt->getComponent<CBoundingBox>();
+      CTransform& bulletT = bulletEnt->getComponent<CTransform>();
+
+      for (auto enemyEnt : enemies) {
+        std::cout << "en cl\n";
+        if (enemyEnt->hasComponent<CBoundingBox>()) {
+          CBoundingBox& enemyBB = enemyEnt->getComponent<CBoundingBox>();
+          CTransform& enemyT = enemyEnt->getComponent<CTransform>();
+
+          if (isCollidingWith(
+                  bulletT.position, Vec2(bulletBB.width, bulletBB.height),
+                  enemyT.position, Vec2(enemyBB.width, enemyBB.height))) {
+            std::cout << "hit\n";
+            enemyEnt->destroy();
+            bulletEnt->destroy();
+          }
+        }
+      }
+    }
+  }
 }
