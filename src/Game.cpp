@@ -1,13 +1,7 @@
 #include "Game.hpp"
 #include "Component.hpp"
 #include "Entity.hpp"
-#include "Systems/EnemySpawner.hpp"
-#include "Systems/Input.hpp"
-#include "Systems/Lifetime.hpp"
-#include "Systems/Movement.hpp"
-#include "Systems/Physics.hpp"
-#include "Systems/PlayerShoot.hpp"
-#include "Systems/Render.hpp"
+#include "Systems.hpp"
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
