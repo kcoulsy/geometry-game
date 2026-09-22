@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.hpp"
+#include "engine/ecs/Scene.hpp"
 
 void sEnemySpawner(Scene* scene, float deltaTime);
 

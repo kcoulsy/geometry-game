@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Entities.hpp"
+#include "../../Entities.hpp"
+#include "EntityManager.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class SceneManger;
@@ -33,23 +34,6 @@ public:
   virtual bool init();
   virtual void update(float dt);
   virtual bool close();
-};
-
-class GameScene : public Scene {
-public:
-  using Scene::Scene;
-  bool init() override;
-  void update(float dt) override;
-  bool close() override;
-};
-
-class MenuScene : public Scene {
-
-public:
-  using Scene::Scene;
-  bool init() override;
-  void update(float dt) override;
-  bool close() override;
 };
 
 class SceneManger {

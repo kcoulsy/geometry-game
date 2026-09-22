@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/ecs/Scene.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -10,7 +11,6 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-#include "Scene.hpp"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>

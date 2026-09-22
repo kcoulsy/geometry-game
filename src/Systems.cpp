@@ -1,7 +1,7 @@
 #include "Systems.hpp"
 #include "Component.hpp"
-#include "Scene.hpp"
 #include "Vec2.hpp"
+#include "engine/ecs/Scene.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Shape.hpp>
