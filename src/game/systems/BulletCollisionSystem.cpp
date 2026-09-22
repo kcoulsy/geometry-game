@@ -1,17 +1,8 @@
+#include "../../engine/math/Collision.hpp"
 #include "../../engine/math/Vec2.hpp"
 #include "../components/Components.hpp"
 #include "Systems.hpp"
 #include <format>
-#include <iostream>
-
-namespace {
-
-bool isCollidingWith(Vec2 aPos, Vec2 aSize, Vec2 bPos, Vec2 bSize) {
-  return (aPos.x < bPos.x + bSize.x && aPos.x + aSize.x > bPos.x && aPos.y < bPos.y + bSize.y &&
-          aPos.y + aSize.y > bPos.y);
-}
-
-} // namespace
 
 void sBulletCollision(Scene* scene) {
   auto& bullets = scene->getEntityManager()->getEntities("bullet");
