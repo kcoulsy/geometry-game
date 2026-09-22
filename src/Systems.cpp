@@ -1,5 +1,6 @@
 #include "Systems.hpp"
 #include "Component.hpp"
+#include "Scene.hpp"
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -7,11 +8,10 @@
 #include <SFML/System/Vector2.hpp>
 #include <format>
 #include <iostream>
-#include <iterator>
 #include <ostream>
 
-void sEnemySpawner(Game* gameCtx, float deltaTime) {
-  auto em = gameCtx->getEntityManager();
+void sEnemySpawner(Scene* scene, float deltaTime) {
+  auto em = scene->getEntityManager();
   for (auto e : em->getEntities("enemy_manager")) {
     if (e->hasComponent<CEnemyManager>()) {
       auto& cem = e->getComponent<CEnemyManager>();
@@ -20,9 +20,9 @@ void sEnemySpawner(Game* gameCtx, float deltaTime) {
         cem.timeSinceLastSpawn += deltaTime;
       } else {
         if (em->getEntities("enemies").size() < cem.maxEnemies) {
-          auto window = gameCtx->getWindow();
-          gameCtx->getEntityFactory()->createEnemy(rand() % window->getSize().x,
-                                                   rand() % window->getSize().y);
+          auto window = scene->getWindow();
+          scene->getEntityFactory()->createEnemy(rand() % window->getSize().x,
+                                                 rand() % window->getSize().y);
           cem.currentEnemyCount++;
           cem.timeSinceLastSpawn = 0;
         } else {
@@ -33,8 +33,8 @@ void sEnemySpawner(Game* gameCtx, float deltaTime) {
   }
 }
 
-void sInput(Game* gameCtx) {
-  auto& entities = gameCtx->getEntityManager()->getEntities("player");
+void sInput(Scene* scene) {
+  auto& entities = scene->getEntityManager()->getEntities("player");
 
   for (auto& e : entities) {
     if (e->hasComponent<CInput>()) {
@@ -47,8 +47,8 @@ void sInput(Game* gameCtx) {
   }
 }
 
-void sLifetime(Game* gameCtx, float deltaTime) {
-  auto& entities = gameCtx->getEntityManager()->getEntities();
+void sLifetime(Scene* scene, float deltaTime) {
+  auto& entities = scene->getEntityManager()->getEntities();
 
   for (auto& e : entities) {
     if (e->hasComponent<CLifetime>()) {
@@ -63,8 +63,8 @@ void sLifetime(Game* gameCtx, float deltaTime) {
   }
 }
 
-void sMovement(Game* gameCtx, float deltaTime) {
-  auto& entities = gameCtx->getEntityManager()->getEntities();
+void sMovement(Scene* scene, float deltaTime) {
+  auto& entities = scene->getEntityManager()->getEntities();
 
   for (auto& e : entities) {
     if (e->hasComponent<CVelocity>() && e->hasComponent<CTransform>()) {
@@ -78,9 +78,9 @@ void sMovement(Game* gameCtx, float deltaTime) {
   }
 }
 
-void sPhysics(Game* gameCtx, float deltaTime) {
-  auto window = gameCtx->getWindow();
-  auto& em = gameCtx->getEntityManager()->getEntities("enemies");
+void sPhysics(Scene* scene, float deltaTime) {
+  auto window = scene->getWindow();
+  auto& em = scene->getEntityManager()->getEntities("enemies");
 
   for (auto& e : em) {
     auto& t = e->getComponent<CTransform>();
@@ -106,9 +106,9 @@ void sPhysics(Game* gameCtx, float deltaTime) {
   }
 }
 
-void sPlayerShoot(Game* gameCtx, float deltaTime) {
-  auto& entities = gameCtx->getEntityManager()->getEntities("player");
-  auto window = gameCtx->getWindow();
+void sPlayerShoot(Scene* scene, float deltaTime) {
+  auto& entities = scene->getEntityManager()->getEntities("player");
+  auto window = scene->getWindow();
   for (auto& e : entities) {
     if (e->hasComponent<CShoot>()) {
       auto& cs = e->getComponent<CShoot>();
@@ -122,7 +122,7 @@ void sPlayerShoot(Game* gameCtx, float deltaTime) {
           auto mp = window->mapPixelToCoords(p);
           Vec2 mouseVec = Vec2(mp.x, mp.y);
 
-          gameCtx->getEntityFactory()->createBullet(
+          scene->getEntityFactory()->createBullet(
               e->getComponent<CTransform>().position, mouseVec, cs.bulletSpeed);
         }
       } else {
@@ -132,16 +132,16 @@ void sPlayerShoot(Game* gameCtx, float deltaTime) {
   }
 }
 
-void sRenderUI(Game* gameCtx) {
-  auto em = gameCtx->getEntityManager();
-  auto window = gameCtx->getWindow();
+void sRenderUI(GameScene* scene) {
+  auto em = scene->getEntityManager();
+  auto window = scene->getWindow();
 
   auto& entities = em->getEntities("ui");
 
   for (auto e : entities) {
     if (e->hasComponent<CUIText>()) {
       auto& t = e->getComponent<CUIText>();
-      sf::Text& text = t.textObject(*gameCtx->getFont());
+      sf::Text& text = t.textObject(*scene->getFont());
 
       // set the string to display
       text.setString(t.text);
@@ -164,9 +164,9 @@ void sRenderUI(Game* gameCtx) {
   }
 }
 
-void sRender(Game* gameCtx) {
-  auto em = gameCtx->getEntityManager();
-  auto window = gameCtx->getWindow();
+void sRender(Scene* scene) {
+  auto em = scene->getEntityManager();
+  auto window = scene->getWindow();
   window->clear(sf::Color::Cyan);
 
   auto& entities = em->getEntities();
@@ -210,10 +210,6 @@ void sRender(Game* gameCtx) {
       }
     }
   }
-
-  sRenderUI(gameCtx);
-
-  window->display();
 }
 
 bool isCollidingWith(Vec2 aPos, Vec2 aSize, Vec2 bPos, Vec2 bSize) {
@@ -221,10 +217,10 @@ bool isCollidingWith(Vec2 aPos, Vec2 aSize, Vec2 bPos, Vec2 bSize) {
           aPos.y + aSize.y > bPos.y);
 }
 
-void sBulletCollision(Game* gameCtx) {
-  auto& bullets = gameCtx->getEntityManager()->getEntities("bullet");
-  auto& enemies = gameCtx->getEntityManager()->getEntities("enemies");
-  auto& uis = gameCtx->getEntityManager()->getEntities("ui");
+void sBulletCollision(Scene* scene) {
+  auto& bullets = scene->getEntityManager()->getEntities("bullet");
+  auto& enemies = scene->getEntityManager()->getEntities("enemies");
+  auto& uis = scene->getEntityManager()->getEntities("ui");
 
   for (auto bulletEnt : bullets) {
     if (bulletEnt->hasComponent<CBoundingBox>()) {
@@ -259,8 +255,8 @@ void sBulletCollision(Game* gameCtx) {
   }
 }
 
-void sDebugUI(Game* gameCtx, float dt) {
-  auto& ents = gameCtx->getEntityManager()->getEntities();
+void sDebugUI(Scene* scene, float dt) {
+  auto& ents = scene->getEntityManager()->getEntities();
 
   for (auto& e : ents) {
     if (e->hasComponent<CDebug>() && e->hasComponent<CUIText>()) {

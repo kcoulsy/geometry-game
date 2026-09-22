@@ -1,21 +1,22 @@
+#pragma once
 
+#include "Scene.hpp"
 
-#include "Game.hpp"
+void sEnemySpawner(Scene* scene, float deltaTime);
 
-void sEnemySpawner(Game* gameCtx, float deltaTime);
+void sInput(Scene* scene);
 
-void sInput(Game* gameCtx);
+void sLifetime(Scene* scene, float deltaTime);
 
-void sLifetime(Game* gameCtx, float deltaTime);
+void sMovement(Scene* scene, float deltaTime);
 
-void sMovement(Game* gameCtx, float deltaTime);
+void sPhysics(Scene* scene, float deltaTime);
 
-void sPhysics(Game* gameCtx, float deltaTime);
+void sPlayerShoot(Scene* scene, float deltaTime);
 
-void sPlayerShoot(Game* gameCtx, float deltaTime);
+void sRender(Scene* scene);
+void sRenderUI(GameScene* scene);
 
-void sRender(Game* gameCtx);
+void sBulletCollision(Scene* scene);
 
-void sBulletCollision(Game* gameCtx);
-
-void sDebugUI(Game* gameCtx, float dt);
+void sDebugUI(Scene* scene, float dt);
