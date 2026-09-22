@@ -139,6 +139,11 @@ public:
   int score;
 };
 
+class CDebug : public Component {
+public:
+  float lastTime;
+};
+
 typedef std::tuple<CTransform,
                    CVelocity,
                    CRectShape,
@@ -149,5 +154,6 @@ typedef std::tuple<CTransform,
                    CEnemyManager,
                    CBoundingBox,
                    CUIText,
-                   CScore>
+                   CScore,
+                   CDebug>
     Components;

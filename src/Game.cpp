@@ -12,6 +12,7 @@
 #include <SFML/Window/Mouse.hpp>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 
 Game::Game() {
   m_window = nullptr;
@@ -26,17 +27,21 @@ Game::Game() {
   }
 
   spawnPlayer();
-  m_entityManager.createEntity("enemy_manager")->addComponent(CEnemyManager(10, 0.1f));
+  m_entityManager.createEntity("enemy_manager")->addComponent(CEnemyManager(5000, 0.001f));
   m_entityManager.createEntity("ui")->addComponents(CUIText("Score: 0"), CScore());
+  m_entityManager.createEntity("ui")->addComponents(
+      CTransform(Vec2(0, 100)), CUIText("Debug:"), CDebug());
 }
 
 Game::~Game() { delete m_window; }
 
 void Game::run() {
   sf::Clock clock;
+  float lastTime = 0;
   while (getIsRunning()) {
     const float dt = clock.restart().asSeconds();
     m_entityManager.update();
+
     pollEvents();
     sLifetime(this, dt);
     sInput(this);
@@ -45,6 +50,7 @@ void Game::run() {
     sPhysics(this, dt);
     sMovement(this, dt);
     sEnemySpawner(this, dt);
+    sDebugUI(this, dt);
     sRender(this);
   }
 }

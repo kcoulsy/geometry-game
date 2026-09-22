@@ -7,6 +7,8 @@
 #include <SFML/System/Vector2.hpp>
 #include <format>
 #include <iostream>
+#include <iterator>
+#include <ostream>
 
 void sEnemySpawner(Game* gameCtx, float deltaTime) {
   auto em = gameCtx->getEntityManager();
@@ -151,6 +153,10 @@ void sRenderUI(Game* gameCtx) {
       // set the text style
       text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
+      if (e->hasComponent<CTransform>()) {
+        auto& t = e->getComponent<CTransform>();
+        text.setPosition(sf::Vector2f(t.position.x, t.position.y));
+      }
       window->draw(text);
     }
   }
@@ -232,7 +238,7 @@ void sBulletCollision(Game* gameCtx) {
                               Vec2(bulletBB.width, bulletBB.height),
                               enemyT.position,
                               Vec2(enemyBB.width, enemyBB.height))) {
-            std::cout << "hit\n";
+
             enemyEnt->destroy();
             bulletEnt->destroy();
 
@@ -247,6 +253,19 @@ void sBulletCollision(Game* gameCtx) {
           }
         }
       }
+    }
+  }
+}
+
+void sDebugUI(Game* gameCtx, float dt) {
+  auto& ents = gameCtx->getEntityManager()->getEntities();
+
+  for (auto& e : ents) {
+    if (e->hasComponent<CDebug>() && e->hasComponent<CUIText>()) {
+      CDebug& c = e->getComponent<CDebug>();
+      CUIText& t = e->getComponent<CUIText>();
+      float fps = 1.f / (dt);
+      t.text = std::format("FPS: {} \n Entities: {}", fps, ents.size());
     }
   }
 }
