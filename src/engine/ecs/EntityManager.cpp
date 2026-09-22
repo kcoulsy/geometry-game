@@ -1,5 +1,5 @@
 #include "EntityManager.hpp"
-#include <iostream>
+#include "../core/Debug.hpp"
 #include <memory>
 
 EntityManager::EntityManager() {}
@@ -34,6 +34,8 @@ void EntityManager::update() {
 }
 
 std::shared_ptr<Entity> EntityManager::createEntity(const std::string& tag) {
+  K_ASSERT(!tag.empty(), "EntityManager::createEntity: tag must not be empty");
+
   auto e = std::make_shared<Entity>(tag, m_entityCount++);
   m_entitiesToAdd.push_back(e);
 
@@ -43,4 +45,4 @@ std::shared_ptr<Entity> EntityManager::createEntity(const std::string& tag) {
 EntityVec& EntityManager::getEntities() { return m_entities; }
 EntityVec& EntityManager::getEntities(const std::string& tag) { return m_taggedEntities[tag]; }
 EntityVec& getEntities(const std::string& tag);
-void EntityManager::printSize() { std::cout << "EM size " << m_entities.size() << std::endl; }
+void EntityManager::printSize() { K_TRACE("EM size {}", m_entities.size()); }

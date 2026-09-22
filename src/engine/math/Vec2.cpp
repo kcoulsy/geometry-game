@@ -1,6 +1,6 @@
 #include "Vec2.hpp"
+#include "../core/Debug.hpp"
 #include <cmath>
-#include <iostream>
 
 Vec2::Vec2() {}
 Vec2::Vec2(float init_x, float init_y) : x(init_x), y(init_y) {}
@@ -25,6 +25,4 @@ Vec2 Vec2::normalize() {
   return Vec2(x / length, y / length);
 }
 
-void Vec2::print(std::string label) {
-  std::cout << "Vec2 " << label << " (" << x << "," << y << ")\n";
-}
+void Vec2::print(std::string label) { K_TRACE("Vec2 {} ({}, {})", label, x, y); }
