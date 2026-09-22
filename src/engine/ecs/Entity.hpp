@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Component.hpp"
-#include "EntityManager.hpp"
 #include <concepts>
 #include <cstddef>
 #include <map>
 #include <memory>
 #include <string>
 #include <typeindex>
-#include <typeinfo>
 #include <unordered_map>
 #include <utility>
 #include <vector>

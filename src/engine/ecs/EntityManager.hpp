@@ -1,15 +1,8 @@
 #pragma once
 
 #include "Entity.hpp"
-#include <map>
 #include <memory>
 #include <string>
-#include <vector>
-
-class Entity;
-
-typedef std::vector<std::shared_ptr<Entity>> EntityVec;
-typedef std::map<std::string, EntityVec> EntityMap;
 
 class EntityManager {
 private:
