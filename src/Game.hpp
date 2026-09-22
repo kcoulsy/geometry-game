@@ -20,7 +20,7 @@ class Game {
 private:
   sf::RenderWindow* m_window;
   sf::VideoMode m_videoMode;
-  Scene* m_scene;
+  SceneManger m_sceneManager;
 
   bool getIsRunning() const;
   void pollEvents();

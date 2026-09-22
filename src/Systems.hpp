@@ -15,7 +15,7 @@ void sPhysics(Scene* scene, float deltaTime);
 void sPlayerShoot(Scene* scene, float deltaTime);
 
 void sRender(Scene* scene);
-void sRenderUI(GameScene* scene);
+void sRenderUI(Scene* scene);
 
 void sBulletCollision(Scene* scene);
 

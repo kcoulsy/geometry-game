@@ -132,7 +132,7 @@ void sPlayerShoot(Scene* scene, float deltaTime) {
   }
 }
 
-void sRenderUI(GameScene* scene) {
+void sRenderUI(Scene* scene) {
   auto em = scene->getEntityManager();
   auto window = scene->getWindow();
 

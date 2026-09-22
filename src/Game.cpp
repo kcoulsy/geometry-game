@@ -12,18 +12,12 @@ Game::Game() {
   m_window = nullptr;
   m_videoMode = sf::VideoMode({800, 600});
   m_window = new sf::RenderWindow(m_videoMode, "My game", sf::Style::Titlebar | sf::Style::Close);
-
-  m_scene = new GameScene(m_window);
-
   m_window->setFramerateLimit(60);
 
-  m_scene->init();
+  m_sceneManager.goToScene(new MenuScene(m_window));
 }
 
-Game::~Game() {
-  delete m_scene;
-  delete m_window;
-}
+Game::~Game() { delete m_window; }
 
 void Game::run() {
   sf::Clock clock;
@@ -31,8 +25,11 @@ void Game::run() {
   while (getIsRunning()) {
     const float dt = clock.restart().asSeconds();
     pollEvents();
-
-    m_scene->update(dt);
+    auto scene = m_sceneManager.getCurrent();
+    if (scene) {
+      scene->update(dt);
+    }
+    m_sceneManager.resolve();
   }
 }
 
