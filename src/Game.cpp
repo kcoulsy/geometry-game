@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "Component.hpp"
+#include "ECS.hpp"
 #include "Entities.hpp"
-#include "Entity.hpp"
 #include "Systems.hpp"
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>

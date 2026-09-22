@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity.hpp"
+#include "ECS.hpp"
 #include "Vec2.hpp"
 
 class EntityFactory {

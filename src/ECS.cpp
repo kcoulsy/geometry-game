@@ -1,4 +1,4 @@
-#include "Entity.hpp"
+#include "ECS.hpp"
 #include <cstddef>
 #include <iostream>
 #include <memory>
@@ -55,10 +55,6 @@ std::shared_ptr<Entity> EntityManager::createEntity(const std::string& tag) {
 }
 
 EntityVec& EntityManager::getEntities() { return m_entities; }
-EntityVec& EntityManager::getEntities(const std::string& tag) {
-  return m_taggedEntities[tag];
-}
+EntityVec& EntityManager::getEntities(const std::string& tag) { return m_taggedEntities[tag]; }
 EntityVec& getEntities(const std::string& tag);
-void EntityManager::printSize() {
-  std::cout << "EM size " << m_entities.size() << std::endl;
-}
+void EntityManager::printSize() { std::cout << "EM size " << m_entities.size() << std::endl; }
