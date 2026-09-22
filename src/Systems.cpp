@@ -5,6 +5,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <format>
 #include <iostream>
 
 void sEnemySpawner(Game* gameCtx, float deltaTime) {
@@ -127,6 +128,34 @@ void sPlayerShoot(Game* gameCtx, float deltaTime) {
   }
 }
 
+void sRenderUI(Game* gameCtx) {
+  auto em = gameCtx->getEntityManager();
+  auto window = gameCtx->getWindow();
+
+  auto& entities = em->getEntities("ui");
+
+  for (auto e : entities) {
+    if (e->hasComponent<CUIText>()) {
+      auto& t = e->getComponent<CUIText>();
+      sf::Text& text = t.textObject(*gameCtx->getFont());
+
+      // set the string to display
+      text.setString(t.text);
+
+      // set the character size
+      text.setCharacterSize(24); // in pixels, not points!
+
+      // set the color
+      text.setFillColor(sf::Color::Red);
+
+      // set the text style
+      text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+      window->draw(text);
+    }
+  }
+}
+
 void sRender(Game* gameCtx) {
   auto em = gameCtx->getEntityManager();
   auto window = gameCtx->getWindow();
@@ -174,6 +203,8 @@ void sRender(Game* gameCtx) {
     }
   }
 
+  sRenderUI(gameCtx);
+
   window->display();
 }
 
@@ -185,6 +216,7 @@ bool isCollidingWith(Vec2 aPos, Vec2 aSize, Vec2 bPos, Vec2 bSize) {
 void sBulletCollision(Game* gameCtx) {
   auto& bullets = gameCtx->getEntityManager()->getEntities("bullet");
   auto& enemies = gameCtx->getEntityManager()->getEntities("enemies");
+  auto& uis = gameCtx->getEntityManager()->getEntities("ui");
 
   for (auto bulletEnt : bullets) {
     if (bulletEnt->hasComponent<CBoundingBox>()) {
@@ -203,6 +235,15 @@ void sBulletCollision(Game* gameCtx) {
             std::cout << "hit\n";
             enemyEnt->destroy();
             bulletEnt->destroy();
+
+            for (auto uiEnt : uis) {
+              if (uiEnt->hasComponent<CScore>() && uiEnt->hasComponent<CUIText>()) {
+                auto& s = uiEnt->getComponent<CScore>();
+                s.score = s.score + 1;
+                std::cout << s.score << std::endl;
+                uiEnt->getComponent<CUIText>().text = std::format("Score: {}", s.score);
+              }
+            }
           }
         }
       }

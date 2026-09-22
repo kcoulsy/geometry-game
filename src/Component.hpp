@@ -2,7 +2,10 @@
 
 #include "Vec2.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <memory>
 #include <tuple>
 
 class Component {
@@ -16,8 +19,7 @@ public:
   float rotation = 0.0f;
   Vec2 scale = {1.0f, 1.0f};
   CTransform() = default;
-  CTransform(const Vec2& vp, float r, const Vec2& vs)
-      : position(vp), rotation(r), scale(vs) {};
+  CTransform(const Vec2& vp, float r, const Vec2& vs) : position(vp), rotation(r), scale(vs) {};
   CTransform(const Vec2& vp) : position(vp) {};
 };
 
@@ -35,7 +37,9 @@ public:
   sf::Color outlineColour;
   float outlineThickness = 0.f;
   CRectShape() = default;
-  CRectShape(Vec2 init_size, sf::Color init_color, sf::Color init_outlineColour,
+  CRectShape(Vec2 init_size,
+             sf::Color init_color,
+             sf::Color init_outlineColour,
              float init_outlineThickness)
       : size(init_size), color(init_color), outlineColour(init_outlineColour),
         outlineThickness(init_outlineThickness) {}
@@ -50,11 +54,12 @@ public:
   float outlineThickness = 0.f;
   int sides = 3;
   CPolyShape() = default;
-  CPolyShape(float init_radius, sf::Color init_color,
-             sf::Color init_outlineColour, float init_outlineThickness,
+  CPolyShape(float init_radius,
+             sf::Color init_color,
+             sf::Color init_outlineColour,
+             float init_outlineThickness,
              int init_sides)
-      : radius(init_radius), color(init_color),
-        outlineColour(init_outlineColour),
+      : radius(init_radius), color(init_color), outlineColour(init_outlineColour),
         outlineThickness(init_outlineThickness), sides(init_sides) {}
   sf::CircleShape shape;
 };
@@ -68,8 +73,7 @@ public:
   sf::RectangleShape debugShape;
   CBoundingBox() = default;
   CBoundingBox(float xIn, float yIn) : width(xIn), height(yIn) {}
-  CBoundingBox(float xIn, float yIn, Vec2 offsetIn)
-      : width(xIn), height(yIn), offset(offsetIn) {}
+  CBoundingBox(float xIn, float yIn, Vec2 offsetIn) : width(xIn), height(yIn), offset(offsetIn) {}
 };
 
 class CInput : public Component {
@@ -85,8 +89,7 @@ public:
   CShoot() = default;
   // hacky way to allow immediate shooting
   CShoot(float delay, float speed)
-      : delayBetweenShots(delay), timeSinceLastShot(delay),
-        bulletSpeed(speed) {};
+      : delayBetweenShots(delay), timeSinceLastShot(delay), bulletSpeed(speed) {};
 };
 
 class CLifetime : public Component {
@@ -105,10 +108,46 @@ public:
   float timeSinceLastSpawn = {0};
   CEnemyManager() = default;
   CEnemyManager(int max, float interval)
-      : maxEnemies(max), spawnInterval(interval), timeSinceLastSpawn(interval) {
-  }
+      : maxEnemies(max), spawnInterval(interval), timeSinceLastSpawn(interval) {}
 };
 
-typedef std::tuple<CTransform, CVelocity, CRectShape, CInput, CShoot, CLifetime,
-                   CPolyShape, CEnemyManager, CBoundingBox>
+class CUIText : public Component {
+  // sf::Text has no default constructor, and every entity default-constructs
+  // the whole Components tuple, so create the text lazily once we have a font.
+  std::unique_ptr<sf::Text> m_text;
+
+public:
+  std::string text;
+  CUIText() = default;
+  CUIText(std::string init_text) : text(init_text) {}
+  CUIText(CUIText&&) = default;
+  CUIText& operator=(CUIText&&) = default;
+
+  sf::Text& textObject(const sf::Font& font) {
+    if (!m_text)
+      m_text = std::make_unique<sf::Text>(font);
+    return *m_text;
+  }
+
+  // SFML 3.1 + this FreeType/HarfBuzz combination deadlocks in ~sf::Text once
+  // the text has been drawn, so intentionally leak it instead of hanging.
+  ~CUIText() { m_text.release(); }
+};
+
+class CScore : public Component {
+public:
+  int score;
+};
+
+typedef std::tuple<CTransform,
+                   CVelocity,
+                   CRectShape,
+                   CInput,
+                   CShoot,
+                   CLifetime,
+                   CPolyShape,
+                   CEnemyManager,
+                   CBoundingBox,
+                   CUIText,
+                   CScore>
     Components;

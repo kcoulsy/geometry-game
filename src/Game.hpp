@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Network.hpp>
@@ -20,6 +21,7 @@ private:
   sf::RenderWindow* m_window;
   sf::VideoMode m_videoMode;
   EntityManager m_entityManager;
+  sf::Font m_font;
 
   bool getIsRunning() const;
   void pollEvents();
@@ -30,6 +32,7 @@ public:
 
   sf::RenderWindow* getWindow();
   EntityManager* getEntityManager();
+  sf::Font* getFont();
 
   void spawnPlayer();
   void spawnBullet(Vec2& startPos, Vec2 towards, float speed);

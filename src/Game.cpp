@@ -4,6 +4,7 @@
 #include "Systems.hpp"
 #include "Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -19,8 +20,14 @@ Game::Game() {
 
   m_window->setFramerateLimit(60);
 
+  if (!m_font.openFromFile("assets/retro-font.ttf")) {
+    throw 1;
+    // todo some proper handling here
+  }
+
   spawnPlayer();
   m_entityManager.createEntity("enemy_manager")->addComponent(CEnemyManager(10, 0.1f));
+  m_entityManager.createEntity("ui")->addComponents(CUIText("Score: 0"), CScore());
 }
 
 Game::~Game() { delete m_window; }
@@ -117,3 +124,4 @@ bool Game::getIsRunning() const { return m_window->isOpen(); }
 
 sf::RenderWindow* Game::getWindow() { return m_window; }
 EntityManager* Game::getEntityManager() { return &m_entityManager; }
+sf::Font* Game::getFont() { return &m_font; };
