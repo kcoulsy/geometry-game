@@ -11,17 +11,18 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
+#include "Entities.hpp"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
 #include <SFML/Window/WindowEnums.hpp>
-
 class Game {
 private:
   sf::RenderWindow* m_window;
   sf::VideoMode m_videoMode;
   EntityManager m_entityManager;
   sf::Font m_font;
+  EntityFactory* m_entities;
 
   bool getIsRunning() const;
   void pollEvents();
@@ -33,10 +34,7 @@ public:
   sf::RenderWindow* getWindow();
   EntityManager* getEntityManager();
   sf::Font* getFont();
-
-  void spawnPlayer();
-  void spawnBullet(Vec2& startPos, Vec2 towards, float speed);
-  void spawnEnemy();
+  EntityFactory* getEntityFactory();
 
   void run();
 };

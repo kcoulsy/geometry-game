@@ -20,8 +20,9 @@ void sEnemySpawner(Game* gameCtx, float deltaTime) {
         cem.timeSinceLastSpawn += deltaTime;
       } else {
         if (em->getEntities("enemies").size() < cem.maxEnemies) {
-
-          gameCtx->spawnEnemy();
+          auto window = gameCtx->getWindow();
+          gameCtx->getEntityFactory()->createEnemy(rand() % window->getSize().x,
+                                                   rand() % window->getSize().y);
           cem.currentEnemyCount++;
           cem.timeSinceLastSpawn = 0;
         } else {
@@ -121,7 +122,8 @@ void sPlayerShoot(Game* gameCtx, float deltaTime) {
           auto mp = window->mapPixelToCoords(p);
           Vec2 mouseVec = Vec2(mp.x, mp.y);
 
-          gameCtx->spawnBullet(e->getComponent<CTransform>().position, mouseVec, cs.bulletSpeed);
+          gameCtx->getEntityFactory()->createBullet(
+              e->getComponent<CTransform>().position, mouseVec, cs.bulletSpeed);
         }
       } else {
         cs.timeSinceLastShot += deltaTime;
