@@ -1,4 +1,4 @@
-#include "../../Component.hpp"
+#include "../components/Components.hpp"
 #include "../../engine/math/Vec2.hpp"
 #include "Systems.hpp"
 #include <format>

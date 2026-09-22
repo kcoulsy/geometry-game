@@ -1,4 +1,4 @@
-#include "../../Component.hpp"
+#include "../components/Components.hpp"
 #include "Systems.hpp"
 
 void sPhysics(Scene* scene, float deltaTime) {

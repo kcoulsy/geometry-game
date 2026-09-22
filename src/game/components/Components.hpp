@@ -1,17 +1,13 @@
 #pragma once
 
-#include "engine/math/Vec2.hpp"
+#include "../../engine/ecs/Component.hpp"
+#include "../../engine/math/Vec2.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <memory>
-#include <tuple>
-
-class Component {
-public:
-  bool exists;
-};
+#include <string>
 
 class CTransform : public Component {
 public:
@@ -112,8 +108,7 @@ public:
 };
 
 class CUIText : public Component {
-  // sf::Text has no default constructor, and every entity default-constructs
-  // the whole Components tuple, so create the text lazily once we have a font.
+  // sf::Text has no default constructor, so create it lazily once we have a font.
   std::unique_ptr<sf::Text> m_text;
 
 public:
@@ -143,17 +138,3 @@ class CDebug : public Component {
 public:
   float lastTime;
 };
-
-typedef std::tuple<CTransform,
-                   CVelocity,
-                   CRectShape,
-                   CInput,
-                   CShoot,
-                   CLifetime,
-                   CPolyShape,
-                   CEnemyManager,
-                   CBoundingBox,
-                   CUIText,
-                   CScore,
-                   CDebug>
-    Components;

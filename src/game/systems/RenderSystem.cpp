@@ -1,4 +1,4 @@
-#include "../../Component.hpp"
+#include "../components/Components.hpp"
 #include "Systems.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

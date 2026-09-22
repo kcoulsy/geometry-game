@@ -1,4 +1,5 @@
 #include "Entities.hpp"
+#include "components/Components.hpp"
 
 void EntityFactory::createPlayer(float xPos, float yPos) {
   m_entityManager->createEntity("player")->addComponents(

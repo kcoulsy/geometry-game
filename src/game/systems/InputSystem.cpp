@@ -1,4 +1,4 @@
-#include "../../Component.hpp"
+#include "../components/Components.hpp"
 #include "Systems.hpp"
 #include <SFML/Window/Keyboard.hpp>
 

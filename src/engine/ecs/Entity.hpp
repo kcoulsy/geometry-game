@@ -1,12 +1,20 @@
 #pragma once
 
-#include "../../Component.hpp"
+#include "Component.hpp"
 #include "EntityManager.hpp"
+#include <concepts>
 #include <cstddef>
 #include <map>
 #include <memory>
 #include <string>
+#include <typeindex>
+#include <typeinfo>
+#include <unordered_map>
+#include <utility>
 #include <vector>
+
+template <typename T>
+concept IsComponent = std::derived_from<T, Component>;
 
 class Entity {
   friend class EntityManager;
@@ -16,7 +24,7 @@ private:
   bool m_shouldDieNextFrame = false;
 
   std::string m_tag;
-  Components m_components;
+  std::unordered_map<std::type_index, std::unique_ptr<Component>> m_components;
 
   Entity();
 
@@ -25,20 +33,17 @@ public:
   int getId();
   std::string getTag();
 
-  template <typename T, typename... Args>
-  T& addComponent(Args&&... args);
-
-  template <typename T>
+  template <IsComponent T>
   T& addComponent(T component);
 
-  template <typename... Components>
-  void addComponents(Components&&... components);
+  template <IsComponent... Ts>
+  void addComponents(Ts&&... components);
 
-  template <typename T>
+  template <IsComponent T>
   T& getComponent();
-  template <typename T>
+  template <IsComponent T>
   bool hasComponent() const;
-  template <typename T>
+  template <IsComponent T>
   void removeComponent();
 
   bool shouldDieNextFrame();
@@ -49,40 +54,31 @@ public:
 typedef std::vector<std::shared_ptr<Entity>> EntityVec;
 typedef std::map<std::string, EntityVec> EntityMap;
 
-template <typename T, typename... Args>
-T& Entity::addComponent(Args&&... args) {
-  auto& component = std::get<T>(m_components);
-  component = T(std::forward<Args>(args)...);
-  component.exists = true;
-  return component;
-}
-
-template <typename T>
+template <IsComponent T>
 T& Entity::addComponent(T component) {
-  auto& existing = std::get<T>(m_components);
-  existing = std::move(component);
-  existing.exists = true;
-  return existing;
+  auto owned = std::make_unique<T>(std::move(component));
+  T& ref = *owned;
+  m_components[std::type_index(typeid(T))] = std::move(owned);
+  return ref;
 }
 
-template <typename... Components>
-void Entity::addComponents(Components&&... components) {
-  // ugly syntax - this is a fold expression - basically for each of components
-  // call add component
-  (addComponent(std::forward<Components>(components)), ...);
+template <IsComponent... Ts>
+void Entity::addComponents(Ts&&... components) {
+  // fold expression: call addComponent for each argument
+  (addComponent(std::forward<Ts>(components)), ...);
 }
 
-template <typename T>
+template <IsComponent T>
 T& Entity::getComponent() {
-  return std::get<T>(m_components);
+  return static_cast<T&>(*m_components.at(std::type_index(typeid(T))));
 }
 
-template <typename T>
+template <IsComponent T>
 bool Entity::hasComponent() const {
-  return std::get<T>(m_components).exists;
+  return m_components.contains(std::type_index(typeid(T)));
 }
 
-template <typename T>
+template <IsComponent T>
 void Entity::removeComponent() {
-  return std::get<T>(m_components) = T();
+  m_components.erase(std::type_index(typeid(T)));
 }

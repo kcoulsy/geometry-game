@@ -24,8 +24,6 @@ public:
   EntityVec& getEntities();
   EntityVec& getEntities(const std::string& tag);
 
-  void createPlayer();
-  void createBullet(Vec2& startPos, Vec2 towards, float speed);
   void update();
   void printSize();
 };
