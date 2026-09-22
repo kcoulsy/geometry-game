@@ -118,8 +118,7 @@ void sPlayerShoot(Game* gameCtx, float deltaTime) {
           auto mp = window->mapPixelToCoords(p);
           Vec2 mouseVec = Vec2(mp.x, mp.y);
 
-          gameCtx->spawnBullet(e->getComponent<CTransform>().position, mouseVec,
-                               cs.bulletSpeed);
+          gameCtx->spawnBullet(e->getComponent<CTransform>().position, mouseVec, cs.bulletSpeed);
         }
       } else {
         cs.timeSinceLastShot += deltaTime;
@@ -165,8 +164,8 @@ void sRender(Game* gameCtx) {
         auto& ct = e->getComponent<CTransform>();
         cbb.debugShape.setOrigin(sf::Vector2f(cbb.width / 2, cbb.height / 2));
         cbb.debugShape.setSize(sf::Vector2f(cbb.width, cbb.height));
-        cbb.debugShape.setPosition(sf::Vector2f(ct.position.x + cbb.offset.x,
-                                                ct.position.y + cbb.offset.y));
+        cbb.debugShape.setPosition(
+            sf::Vector2f(ct.position.x + cbb.offset.x, ct.position.y + cbb.offset.y));
         cbb.debugShape.setFillColor(sf::Color::Transparent);
         cbb.debugShape.setOutlineColor(sf::Color::Red);
         cbb.debugShape.setOutlineThickness(2.f);
@@ -179,8 +178,8 @@ void sRender(Game* gameCtx) {
 }
 
 bool isCollidingWith(Vec2 aPos, Vec2 aSize, Vec2 bPos, Vec2 bSize) {
-  return (aPos.x < bPos.x + bSize.x && aPos.x + aSize.x > bPos.x &&
-          aPos.y < bPos.y + bSize.y && aPos.y + aSize.y > bPos.y);
+  return (aPos.x < bPos.x + bSize.x && aPos.x + aSize.x > bPos.x && aPos.y < bPos.y + bSize.y &&
+          aPos.y + aSize.y > bPos.y);
 }
 
 void sBulletCollision(Game* gameCtx) {
@@ -193,14 +192,14 @@ void sBulletCollision(Game* gameCtx) {
       CTransform& bulletT = bulletEnt->getComponent<CTransform>();
 
       for (auto enemyEnt : enemies) {
-        std::cout << "en cl\n";
         if (enemyEnt->hasComponent<CBoundingBox>()) {
           CBoundingBox& enemyBB = enemyEnt->getComponent<CBoundingBox>();
           CTransform& enemyT = enemyEnt->getComponent<CTransform>();
 
-          if (isCollidingWith(
-                  bulletT.position, Vec2(bulletBB.width, bulletBB.height),
-                  enemyT.position, Vec2(enemyBB.width, enemyBB.height))) {
+          if (isCollidingWith(bulletT.position,
+                              Vec2(bulletBB.width, bulletBB.height),
+                              enemyT.position,
+                              Vec2(enemyBB.width, enemyBB.height))) {
             std::cout << "hit\n";
             enemyEnt->destroy();
             bulletEnt->destroy();

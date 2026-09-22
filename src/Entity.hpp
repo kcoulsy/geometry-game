@@ -26,6 +26,13 @@ public:
 
   template <typename T, typename... Args>
   T& addComponent(Args&&... args);
+
+  template <typename T>
+  T& addComponent(T component);
+
+  template <typename... Components>
+  void addComponents(Components&&... components);
+
   template <typename T>
   T& getComponent();
   template <typename T>
@@ -66,6 +73,21 @@ T& Entity::addComponent(Args&&... args) {
   component = T(std::forward<Args>(args)...);
   component.exists = true;
   return component;
+}
+
+template <typename T>
+T& Entity::addComponent(T component) {
+  auto& existing = std::get<T>(m_components);
+  existing = std::move(component);
+  existing.exists = true;
+  return existing;
+}
+
+template <typename... Components>
+void Entity::addComponents(Components&&... components) {
+  // ugly syntax - this is a fold expression - basically for each of components
+  // call add component
+  (addComponent(std::forward<Components>(components)), ...);
 }
 
 template <typename T>
