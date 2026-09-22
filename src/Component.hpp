@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec2.hpp"
+#include "engine/math/Vec2.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
