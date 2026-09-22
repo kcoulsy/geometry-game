@@ -38,7 +38,6 @@ void SceneManger::resolve() {
 }
 
 EntityManager* Scene::getEntityManager() { return &m_entityManager; }
-EntityFactory* Scene::getEntityFactory() { return m_entities; }
 
 bool Scene::init() { return true; }
 void Scene::update(float dt) {}

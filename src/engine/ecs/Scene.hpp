@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../game/Entities.hpp"
 #include "EntityManager.hpp"
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class SceneManger;
@@ -9,18 +9,15 @@ class SceneManger;
 class Scene {
 protected:
   EntityManager m_entityManager;
-  EntityFactory* m_entities;
   sf::RenderWindow* m_window;
   SceneManger* m_sceneManager;
   sf::Font m_font;
 
 public:
   virtual ~Scene() = default;
-  Scene(sf::RenderWindow* window) : m_window(window) {
-    m_entities = new EntityFactory(&m_entityManager);
-  }
+  Scene(sf::RenderWindow* window) : m_window(window) {}
+
   EntityManager* getEntityManager();
-  EntityFactory* getEntityFactory();
   sf::Font* getFont() { return &m_font; };
 
   sf::RenderWindow* getWindow() { return m_window; }

@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../../engine/ecs/Scene.hpp"
+#include "../Entities.hpp"
 
-void sEnemySpawner(Scene* scene, float deltaTime);
+void sEnemySpawner(Scene* scene, EntityFactory& factory, float deltaTime);
 
 void sInput(Scene* scene);
 
@@ -12,7 +13,7 @@ void sMovement(Scene* scene, float deltaTime);
 
 void sPhysics(Scene* scene, float deltaTime);
 
-void sPlayerShoot(Scene* scene, float deltaTime);
+void sPlayerShoot(Scene* scene, EntityFactory& factory, float deltaTime);
 
 void sRender(Scene* scene);
 void sRenderUI(Scene* scene);

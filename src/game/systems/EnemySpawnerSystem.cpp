@@ -2,7 +2,7 @@
 #include "Systems.hpp"
 #include <cstdlib>
 
-void sEnemySpawner(Scene* scene, float deltaTime) {
+void sEnemySpawner(Scene* scene, EntityFactory& factory, float deltaTime) {
   auto em = scene->getEntityManager();
   for (auto e : em->getEntities("enemy_manager")) {
     if (e->hasComponent<CEnemyManager>()) {
@@ -13,8 +13,7 @@ void sEnemySpawner(Scene* scene, float deltaTime) {
       } else {
         if (em->getEntities("enemies").size() < cem.maxEnemies) {
           auto window = scene->getWindow();
-          scene->getEntityFactory()->createEnemy(rand() % window->getSize().x,
-                                                 rand() % window->getSize().y);
+          factory.createEnemy(rand() % window->getSize().x, rand() % window->getSize().y);
           cem.currentEnemyCount++;
           cem.timeSinceLastSpawn = 0;
         } else {

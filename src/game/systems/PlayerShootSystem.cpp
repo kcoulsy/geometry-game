@@ -3,7 +3,7 @@
 #include "Systems.hpp"
 #include <SFML/Window/Mouse.hpp>
 
-void sPlayerShoot(Scene* scene, float deltaTime) {
+void sPlayerShoot(Scene* scene, EntityFactory& factory, float deltaTime) {
   auto& entities = scene->getEntityManager()->getEntities("player");
   auto window = scene->getWindow();
   for (auto& e : entities) {
@@ -19,8 +19,7 @@ void sPlayerShoot(Scene* scene, float deltaTime) {
           auto mp = window->mapPixelToCoords(p);
           Vec2 mouseVec = Vec2(mp.x, mp.y);
 
-          scene->getEntityFactory()->createBullet(
-              e->getComponent<CTransform>().position, mouseVec, cs.bulletSpeed);
+          factory.createBullet(e->getComponent<CTransform>().position, mouseVec, cs.bulletSpeed);
         }
       } else {
         cs.timeSinceLastShot += deltaTime;
