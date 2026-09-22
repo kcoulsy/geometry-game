@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ecs/Scene.hpp"
+#include "Scene.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>

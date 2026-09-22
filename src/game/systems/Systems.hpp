@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../engine/ecs/Scene.hpp"
+#include "../../engine/core/Scene.hpp"
 #include "../Entities.hpp"
 
 void sEnemySpawner(Scene* scene, EntityFactory& factory, float deltaTime);

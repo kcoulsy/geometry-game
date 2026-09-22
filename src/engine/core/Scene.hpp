@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EntityManager.hpp"
+#include "../ecs/EntityManager.hpp"
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 

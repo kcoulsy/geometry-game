@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../engine/ecs/Scene.hpp"
+#include "../../engine/core/Scene.hpp"
 
 class MenuScene : public Scene {
 public:
