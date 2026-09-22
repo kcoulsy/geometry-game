@@ -1,5 +1,5 @@
 #include "MenuScene.hpp"
-#include "../../Systems.hpp"
+#include "../systems/Systems.hpp"
 #include "GameScene.hpp"
 
 bool MenuScene::init() {
