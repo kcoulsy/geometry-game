@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "../../game/scenes/MenuScene.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -13,8 +12,6 @@ Game::Game() {
   m_videoMode = sf::VideoMode({800, 600});
   m_window = new sf::RenderWindow(m_videoMode, "My game", sf::Style::Titlebar | sf::Style::Close);
   m_window->setFramerateLimit(60);
-
-  m_sceneManager.goToScene(new MenuScene(m_window));
 }
 
 Game::~Game() { delete m_window; }

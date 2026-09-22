@@ -31,5 +31,12 @@ public:
 
   sf::RenderWindow* getWindow();
 
+  // The engine cannot know which scene a game starts on. The game names the
+  // scene type here and the engine constructs it with the window.
+  template <typename SceneT>
+  void setScene() {
+    m_sceneManager.goToScene(new SceneT(m_window));
+  }
+
   void run();
 };
