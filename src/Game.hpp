@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ECS.hpp"
+#include "Entity.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
