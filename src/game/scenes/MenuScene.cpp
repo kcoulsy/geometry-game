@@ -1,4 +1,5 @@
 #include "MenuScene.hpp"
+#include "../../engine/core/SceneManager.hpp"
 #include "../systems/Systems.hpp"
 #include "GameScene.hpp"
 

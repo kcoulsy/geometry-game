@@ -4,13 +4,13 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-class SceneManger;
+class SceneManager;
 
 class Scene {
 protected:
   EntityManager m_entityManager;
   sf::RenderWindow* m_window;
-  SceneManger* m_sceneManager;
+  SceneManager* m_sceneManager;
   sf::Font m_font;
 
 public:
@@ -21,26 +21,14 @@ public:
   sf::Font* getFont() { return &m_font; };
 
   sf::RenderWindow* getWindow() { return m_window; }
-  SceneManger* getScreenManager() { return m_sceneManager; }
+  SceneManager* getSceneManager() { return m_sceneManager; }
 
-  bool preInit(SceneManger* screenManager) {
-    m_sceneManager = screenManager;
+  bool preInit(SceneManager* sceneManager) {
+    m_sceneManager = sceneManager;
     return true;
   }
 
   virtual bool init();
   virtual void update(float dt);
   virtual bool close();
-};
-
-class SceneManger {
-  Scene* m_current = nullptr;
-  Scene* m_next = nullptr;
-
-public:
-  SceneManger() = default;
-  ~SceneManger();
-  bool goToScene(Scene* scene);
-  void resolve();
-  Scene* getCurrent() { return m_current; }
 };

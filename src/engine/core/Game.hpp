@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.hpp"
+#include "SceneManager.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -20,7 +20,7 @@ class Game {
 private:
   sf::RenderWindow* m_window;
   sf::VideoMode m_videoMode;
-  SceneManger m_sceneManager;
+  SceneManager m_sceneManager;
 
   bool getIsRunning() const;
   void pollEvents();
