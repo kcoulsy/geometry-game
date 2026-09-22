@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Entities.hpp"
+#include "../../game/Entities.hpp"
 #include "EntityManager.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 
