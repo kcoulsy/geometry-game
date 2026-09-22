@@ -2,11 +2,13 @@
 #include "components/Components.hpp"
 
 void EntityFactory::createPlayer(float xPos, float yPos) {
-  m_entityManager->createEntity("player")->addComponents(
-      CTransform(Vec2(xPos, yPos)),
-      CPolyShape(12.f, sf::Color::Red, sf::Color::Black, 2.f, 5),
-      CInput(),
-      CShoot(0.1f, 150.f));
+
+  auto e = m_entityManager->createEntity("player");
+
+  e->addComponents(CTransform(Vec2(xPos, yPos)),
+                   CPolyShape(12.f, sf::Color::Red, sf::Color::Black, 2.f, 5),
+                   CInput(),
+                   CShoot(0.1f, 150.f));
 }
 
 void EntityFactory::createBullet(Vec2& startPos, Vec2 towards, float speed) {

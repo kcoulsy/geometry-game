@@ -39,8 +39,13 @@ public:
 
   template <IsComponent T>
   T& getComponent();
+
   template <IsComponent T>
   bool hasComponent() const;
+
+  template <IsComponent... Ts>
+  bool hasComponents() const;
+
   template <IsComponent T>
   void removeComponent();
 
@@ -74,6 +79,11 @@ T& Entity::getComponent() {
 template <IsComponent T>
 bool Entity::hasComponent() const {
   return m_components.contains(std::type_index(typeid(T)));
+}
+
+template <IsComponent... Ts>
+bool Entity::hasComponents() const {
+  return (m_components.contains(std::type_index(typeid(Ts))) && ...);
 }
 
 template <IsComponent T>

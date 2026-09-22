@@ -6,10 +6,11 @@ void sDebugUI(Scene* scene, float dt) {
   auto& ents = scene->getEntityManager()->getEntities();
 
   for (auto& e : ents) {
-    if (e->hasComponent<CDebug>() && e->hasComponent<CUIText>()) {
-      CUIText& t = e->getComponent<CUIText>();
-      float fps = 1.f / (dt);
-      t.text = std::format("FPS: {} \n Entities: {}", fps, ents.size());
-    }
+    if (!e->hasComponents<CDebug, CUIText>())
+      continue;
+
+    CUIText& t = e->getComponent<CUIText>();
+    float fps = 1.f / (dt);
+    t.text = std::format("FPS: {} \n Entities: {}", fps, ents.size());
   }
 }

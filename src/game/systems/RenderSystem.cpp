@@ -12,7 +12,7 @@ void sRender(Scene* scene) {
   auto& entities = em->getEntities();
 
   for (auto& e : entities) {
-    if (e->hasComponent<CRectShape>() && e->hasComponent<CTransform>()) {
+    if (e->hasComponents<CRectShape, CTransform>()) {
       auto& cs = e->getComponent<CRectShape>();
       auto& ct = e->getComponent<CTransform>();
       cs.shape.setOrigin(sf::Vector2f(cs.size.x / 2, cs.size.y / 2));
@@ -23,7 +23,8 @@ void sRender(Scene* scene) {
       cs.shape.setOutlineThickness(cs.outlineThickness);
       window->draw(cs.shape);
     }
-    if (e->hasComponent<CPolyShape>() && e->hasComponent<CTransform>()) {
+
+    if (e->hasComponents<CPolyShape, CTransform>()) {
       auto& cs = e->getComponent<CPolyShape>();
       auto& ct = e->getComponent<CTransform>();
       cs.shape.setPosition(sf::Vector2f(ct.position.x, ct.position.y));
@@ -34,6 +35,7 @@ void sRender(Scene* scene) {
       cs.shape.setOutlineThickness(cs.outlineThickness);
       window->draw(cs.shape);
     }
+
     if (e->hasComponent<CBoundingBox>()) {
       auto& cbb = e->getComponent<CBoundingBox>();
       if (cbb.debug) {

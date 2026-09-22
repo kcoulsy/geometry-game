@@ -1,5 +1,5 @@
-#include "../components/Components.hpp"
 #include "../../engine/math/Vec2.hpp"
+#include "../components/Components.hpp"
 #include "Systems.hpp"
 #include <format>
 #include <iostream>
@@ -19,32 +19,34 @@ void sBulletCollision(Scene* scene) {
   auto& uis = scene->getEntityManager()->getEntities("ui");
 
   for (auto bulletEnt : bullets) {
-    if (bulletEnt->hasComponent<CBoundingBox>()) {
-      CBoundingBox& bulletBB = bulletEnt->getComponent<CBoundingBox>();
-      CTransform& bulletT = bulletEnt->getComponent<CTransform>();
+    if (!bulletEnt->hasComponents<CBoundingBox, CTransform>())
+      continue;
 
-      for (auto enemyEnt : enemies) {
-        if (enemyEnt->hasComponent<CBoundingBox>()) {
-          CBoundingBox& enemyBB = enemyEnt->getComponent<CBoundingBox>();
-          CTransform& enemyT = enemyEnt->getComponent<CTransform>();
+    CBoundingBox& bulletBB = bulletEnt->getComponent<CBoundingBox>();
+    CTransform& bulletT = bulletEnt->getComponent<CTransform>();
 
-          if (isCollidingWith(bulletT.position,
-                              Vec2(bulletBB.width, bulletBB.height),
-                              enemyT.position,
-                              Vec2(enemyBB.width, enemyBB.height))) {
+    for (auto enemyEnt : enemies) {
+      if (!enemyEnt->hasComponents<CBoundingBox, CTransform>())
+        continue;
 
-            enemyEnt->destroy();
-            bulletEnt->destroy();
+      CBoundingBox& enemyBB = enemyEnt->getComponent<CBoundingBox>();
+      CTransform& enemyT = enemyEnt->getComponent<CTransform>();
 
-            for (auto uiEnt : uis) {
-              if (uiEnt->hasComponent<CScore>() && uiEnt->hasComponent<CUIText>()) {
-                auto& s = uiEnt->getComponent<CScore>();
-                s.score = s.score + 1;
-                std::cout << s.score << std::endl;
-                uiEnt->getComponent<CUIText>().text = std::format("Score: {}", s.score);
-              }
-            }
-          }
+      if (isCollidingWith(bulletT.position,
+                          Vec2(bulletBB.width, bulletBB.height),
+                          enemyT.position,
+                          Vec2(enemyBB.width, enemyBB.height))) {
+
+        enemyEnt->destroy();
+        bulletEnt->destroy();
+
+        for (auto uiEnt : uis) {
+          if (!uiEnt->hasComponents<CScore, CUIText>())
+            continue;
+
+          auto& s = uiEnt->getComponent<CScore>();
+          s.score = s.score + 1;
+          uiEnt->getComponent<CUIText>().text = std::format("Score: {}", s.score);
         }
       }
     }

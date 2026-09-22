@@ -6,6 +6,9 @@ void sPhysics(Scene* scene, float deltaTime) {
   auto& em = scene->getEntityManager()->getEntities("enemies");
 
   for (auto& e : em) {
+    if (!e->hasComponents<CTransform, CBoundingBox, CVelocity>())
+      continue;
+
     auto& t = e->getComponent<CTransform>();
     auto& bb = e->getComponent<CBoundingBox>();
     auto& v = e->getComponent<CVelocity>();
