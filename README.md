@@ -1,26 +1,10 @@
-# C++ Project Template
+# geometry-game
 
-Copy this folder, rename it, then update `APP` in the `Makefile` to the name
-of your program.
+A small SFML geometry game built on a hand-rolled ECS engine.
 
-```bash
-cp -R cpp-template my-project
-cd my-project
-make
-make run
-```
-
-Requirements: GNU Make and a C++20-capable compiler such as `g++` or `clang++`.
-
-Put implementation files in `src/`. The Makefile automatically finds every
-`src/*.cpp` file, compiles its matching object file under `build/`, and links
-them into `build/<APP>`.
-
-Useful commands:
+## Build
 
 ```bash
-make        # Compile the program.
-make run    # Compile, then run it.
-make clean  # Remove generated build files.
+cmake -B build
+cmake --build build && ./build/app
 ```
-
