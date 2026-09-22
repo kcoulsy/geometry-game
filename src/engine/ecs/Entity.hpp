@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Component.hpp"
+#include "../../Component.hpp"
+#include "EntityManager.hpp"
 #include <cstddef>
 #include <map>
 #include <memory>
@@ -47,25 +48,6 @@ public:
 
 typedef std::vector<std::shared_ptr<Entity>> EntityVec;
 typedef std::map<std::string, EntityVec> EntityMap;
-
-class EntityManager {
-private:
-  EntityVec m_entities;
-  EntityMap m_taggedEntities;
-  int m_entityCount = 0;
-  EntityVec m_entitiesToAdd;
-
-public:
-  EntityManager();
-  std::shared_ptr<Entity> createEntity(const std::string& tag);
-  EntityVec& getEntities();
-  EntityVec& getEntities(const std::string& tag);
-
-  void createPlayer();
-  void createBullet(Vec2& startPos, Vec2 towards, float speed);
-  void update();
-  void printSize();
-};
 
 template <typename T, typename... Args>
 T& Entity::addComponent(Args&&... args) {

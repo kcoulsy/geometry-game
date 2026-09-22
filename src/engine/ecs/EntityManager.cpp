@@ -1,20 +1,6 @@
 #include "Entity.hpp"
-#include <cstddef>
 #include <iostream>
 #include <memory>
-
-Entity::Entity() {}
-Entity::Entity(const std::string& tag, size_t id) {
-  m_tag = tag;
-  m_id = id;
-}
-
-std::string Entity::getTag() { return m_tag; }
-
-int Entity::getId() { return m_id; }
-void Entity::destroy() { m_shouldDieNextFrame = true; }
-
-bool Entity::shouldDieNextFrame() { return m_shouldDieNextFrame; }
 
 EntityManager::EntityManager() {}
 
@@ -55,10 +41,6 @@ std::shared_ptr<Entity> EntityManager::createEntity(const std::string& tag) {
 }
 
 EntityVec& EntityManager::getEntities() { return m_entities; }
-EntityVec& EntityManager::getEntities(const std::string& tag) {
-  return m_taggedEntities[tag];
-}
+EntityVec& EntityManager::getEntities(const std::string& tag) { return m_taggedEntities[tag]; }
 EntityVec& getEntities(const std::string& tag);
-void EntityManager::printSize() {
-  std::cout << "EM size " << m_entities.size() << std::endl;
-}
+void EntityManager::printSize() { std::cout << "EM size " << m_entities.size() << std::endl; }

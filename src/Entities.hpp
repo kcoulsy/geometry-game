@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Entity.hpp"
 #include "Vec2.hpp"
+#include "engine/ecs/EntityManager.hpp"
 
 class EntityFactory {
 public:
