@@ -1,5 +1,5 @@
 #include "Game.hpp"
-#include "game/scenes/MenuScene.hpp"
+#include "../../game/scenes/MenuScene.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
